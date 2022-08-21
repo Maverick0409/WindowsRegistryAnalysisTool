@@ -1,4 +1,7 @@
-﻿#from fileinput import filename
+﻿########### Windows Registry Automated Analysis Tool ###########
+#Author - Rashmi
+#Student Id - 2154524
+################################################################
 import os
 from tkinter.font import BOLD
 from fpdf import FPDF
@@ -9,7 +12,7 @@ import tkinter as tk
 from tkinter import ttk
 import re
 from tkinter import filedialog
-#import glob
+
 import time
 
 class staticVariables:
@@ -25,7 +28,7 @@ class staticVariables:
     selectedSoftwareLocation=""
     selectedSystemLocation=""
     selectedNtuserLocation=""
-    regRipperPath="..\\library\\readregistry.exe -r "
+    regRipperPath="library\\readregistry.exe -r "
     usbData=[]
     winVerData=[]
     uninstallData=[]
@@ -40,22 +43,6 @@ class staticVariables:
     webUrlsData=[]
     subprocessWindowConfig=0x08000000
 
-def header_Pdf(pdfVar,title):
-    pdfVar.set_font('Arial', 'B', 15)
-    w = pdfVar.get_string_width(title) + 6
-    pdfVar.set_x((210 - w) / 2)
-    pdfVar.set_draw_color(0, 80, 180)
-    pdfVar.set_fill_color(230, 230, 0)
-    pdfVar.set_text_color(220, 50, 50)
-    pdfVar.set_line_width(1)
-    pdfVar.cell(w, 9, title, 1, 1, 'C', 1)
-    pdfVar.ln(10)
-
-def footer_Pdf(pdfVar):
-    pdfVar.set_y(-15)
-    pdfVar.set_font('Arial', 'I', 8)
-    pdfVar.set_text_color(128)
-    pdfVar.cell(0, 10, 'Page ' + str(pdfVar.page_no()), 0, 0, 'C')
 
 def chapter_title_Pdf(pdfVar, num, label):
     pdfVar.set_font('Arial', '', 12)
@@ -64,25 +51,6 @@ def chapter_title_Pdf(pdfVar, num, label):
     pdfVar.cell(0, 6, 'Section %d : %s' % (num, label), 0, 1, 'L', 1)
     pdfVar.ln(4)
 
-def printPdfContent(inputData,pdf,chapterNumber,description,link):
-    pdf.add_page()
-    chapter_title_Pdf(pdf, chapterNumber,description)
-    footer_Pdf(pdf)
-    pdf.set_text_color(0,0,0)
-    pdf.set_font("Courier","",8)
-    pdf.set_link(link,10)
-    pdf.rect(5, 5, 200, 287, 'S')
-    i=25
-    for output in range(len(inputData)):
-        pdf.text(10,i,inputData[output])
-        i=i+5
-        if(i>275):
-            i=20
-            pdf.add_page()
-            footer_Pdf(pdf)
-            pdf.set_font("Courier","",8)
-            pdf.set_text_color(0,0,0)
-            pdf.rect(5, 5, 200, 287, 'S')
 
 def printPdfSectionContent(inputData,pdf,startY,cellWidth):
     pdf.set_text_color(0,0,0)
@@ -134,7 +102,7 @@ def printPdfSectionContent(inputData,pdf,startY,cellWidth):
 def printPdfSectionIntroduction(inputData,pdf,chapterNumber,description,link,cellWidth):
     pdf.add_page()
     chapter_title_Pdf(pdf, chapterNumber,description)
-    #footer_Pdf(pdf)
+
     pdf.set_text_color(0,0,0)
     pdf.set_font("Arial","",9)
     pdf.set_link(link,10)
@@ -153,7 +121,6 @@ def cellTableofContents(index,description,link,pdf,cellWidth):
     
     pdf.set_font("Arial","",10)
     pdf.set_text_color(0,0,0)
-    #pdf.set_y(40)
     pdf.set_x(20)
     pdf.cell(cellWidth[0],10,str(index),1,0,'L',False)
     pdf.cell(cellWidth[1],10,description,1,0,'L',False)
@@ -171,7 +138,6 @@ def pdfGenerator(fileName):
     pdf.set_text_color(0,0,255) 
     pdf.set_auto_page_break(True)
     pdf.text(40,100,"Forensic Report for Selected Artefacts")
-    #footer_Pdf(pdf)
     pdf.add_page()
     pdf.set_font("Arial","UB",16)
     pdf.set_text_color(0,0,0)
@@ -246,22 +212,6 @@ def pdfGenerator(fileName):
         linksArray.append(pdf.add_link())
         cellTableofContents(indexCounter,'Recent Web URLs',linksArray[-1],pdf,cellWidth)
 
-    
-
-
-
-    # pdf.header("Forensic Report showing User Journey")
-    #pdf.set_font("Arial","B",12)
-    #to_page_2 = pdf.add_link()
-    #spdf.cell(20, 20, 'NETWORK', border=1, ln=0, align='', fill=False, link=to_page_2)
-    #to_page_3 = pdf.add_link()
-    #pdf.cell(30, 20, 'SOFTWARE', border=1, ln=0, align='', fill=False, link=to_page_3)
-    #to_page_4 = pdf.add_link()
-    #pdf.cell(40, 20, 'USB DEVICE', border=1, ln=0, align='', fill=False, link=to_page_4)
-    #pdf.write(10,'NETWORK \n',to_page_2)
-    #pdf.write(10,'SOFTWARE\n',to_page_3)
-    #pdf.write(10,'USB DEVICE\n',to_page_4)
-    #footer_Pdf(pdf)
     i=20
     indexCounter=0
     
@@ -270,7 +220,6 @@ def pdfGenerator(fileName):
         inputData=[]
         cellWidth1=[40,150]
         inputData.append("The information below shows the list of USB devices previously attached to the machine. Details are provided as below:")
-        #printPdfContent(staticVariables.usbData,pdf,indexCounter,'USB Devices',linksArray[indexCounter-1])
         row=printPdfSectionIntroduction(inputData,pdf,indexCounter,'USB Devices',linksArray[indexCounter-1],190)
         printPdfSectionContent(staticVariables.usbData,pdf,row+10,cellWidth1)
 
@@ -281,7 +230,6 @@ def pdfGenerator(fileName):
         inputData.append("The information below shows the Windows Operating system Product name, release version, Composition Edition Id which is the edition")
         inputData.append("upon which the current edition is derived from/based on, registered owner of the Operating system operational on the machine, and ")
         inputData.append("installation date and time of OS.")
-        #printPdfContent(staticVariables.winVerData,pdf,indexCounter,'Operating System',linksArray[indexCounter-1])
         row=printPdfSectionIntroduction(inputData,pdf,indexCounter,'Operating System',linksArray[indexCounter-1],190)
         printPdfSectionContent(staticVariables.winVerData,pdf,row+10,cellWidth1)
 
@@ -291,7 +239,6 @@ def pdfGenerator(fileName):
         cellWidth1=[90,150]
         inputData.append("The information below shows the network cards that were in use on this machine. The result can show two types of network cards; ")
         inputData.append("Ethernet (wired) or wireless interface. It also indicates the date and time when these cards were last used.")
-        #printPdfContent(staticVariables.networkCardsData,pdf,indexCounter,'Network Cards',linksArray[indexCounter-1])
         row=printPdfSectionIntroduction(inputData,pdf,indexCounter,'Network Cards',linksArray[indexCounter-1],190)
         printPdfSectionContent(staticVariables.networkCardsData,pdf,row+10,cellWidth1)
 
@@ -300,7 +247,6 @@ def pdfGenerator(fileName):
         inputData=[]
         cellWidth1=[40,150]
         inputData.append("List of software products installed on the machine are as follows according to date and time (latest first):")
-        #printPdfContent(staticVariables.uninstallData,pdf,indexCounter,'Installed Softwares',linksArray[indexCounter-1])
         row=printPdfSectionIntroduction(inputData,pdf,indexCounter,'Installed Softwares',linksArray[indexCounter-1],190)
         printPdfSectionContent(staticVariables.uninstallData,pdf,row+10,cellWidth1)
 
@@ -329,7 +275,6 @@ def pdfGenerator(fileName):
         inputData.append("Password Reset Date : Date and time when account password was last reset.")
         inputData.append("")
         inputData.append("Password Setting : This setting shows if password is set to expire after a certain time period or not.")
-        #printPdfContent(staticVariables.userData,pdf,indexCounter,'User Accounts',linksArray[indexCounter-1])
         row=printPdfSectionIntroduction(inputData,pdf,indexCounter,'User Accounts',linksArray[indexCounter-1],190)
         printPdfSectionContent(staticVariables.userData,pdf,row+10,cellWidth1)
 
@@ -349,7 +294,6 @@ def pdfGenerator(fileName):
         inputData.append("Users: The user SIDs or Security Identifiers for the user accounts are displayed under Users. When an account or group is established,")
         inputData.append("the system generates the SID that identifies that specific account or group. A Comprehensive list and descriptions of well-known SIDs can")
         inputData.append("be found here for further analysis-https://docs.microsoft.com/en-us/windows/security/identity-protection/access-control/security-identifiers.")
-        #printPdfContent(staticVariables.groupData,pdf,indexCounter,'User Groups',linksArray[indexCounter-1])
         row=printPdfSectionIntroduction(inputData,pdf,indexCounter,'User Groups',linksArray[indexCounter-1],190)
         printPdfSectionContent(staticVariables.groupData,pdf,row+10,cellWidth1)
 
@@ -378,7 +322,6 @@ def pdfGenerator(fileName):
         inputData.append("")
         inputData.append("DHCP default gateway: The router's IP which was used to connect to outside networks such as the internet.")
         inputData.append("")
-        #printPdfContent(staticVariables.dhcpData,pdf,indexCounter,'DHCP',linksArray[indexCounter-1])
         row=printPdfSectionIntroduction(inputData,pdf,indexCounter,'DHCP Information',linksArray[indexCounter-1],190)
         printPdfSectionContent(staticVariables.dhcpData,pdf,row+10,cellWidth1)
 
@@ -387,7 +330,6 @@ def pdfGenerator(fileName):
         cellWidth1=[40,150]
         inputData.append("Timezone defined for this machine is:")
         indexCounter=indexCounter+1
-        #printPdfContent(staticVariables.timezoneData,pdf,indexCounter,'Compute Timezone',linksArray[indexCounter-1])
         row=printPdfSectionIntroduction(inputData,pdf,indexCounter,'Compute Timezone',linksArray[indexCounter-1],190)
         printPdfSectionContent(staticVariables.timezoneData,pdf,row+10,cellWidth1)
 
@@ -396,7 +338,6 @@ def pdfGenerator(fileName):
         cellWidth1=[40,150]        
         inputData.append("Last System shutdown time is as follows:")
         indexCounter=indexCounter+1
-        #printPdfContent(staticVariables.shutdownData,pdf,indexCounter,'Shutdown Details',linksArray[indexCounter-1])
         row=printPdfSectionIntroduction(inputData,pdf,indexCounter,'Shutdown Details',linksArray[indexCounter-1],190)
         printPdfSectionContent(staticVariables.shutdownData,pdf,row+10,cellWidth1)
 
@@ -406,7 +347,6 @@ def pdfGenerator(fileName):
         inputData.append("The information below shows list of documents recently accessed on the machine. The documents are divided into multiple categorises by")
         inputData.append("file type or extension. Last write time under each category of document showcases the last time that any document of that was modified.")
         indexCounter=indexCounter+1
-        #printPdfContent(staticVariables.recentDocumentsData,pdf,indexCounter,'Recent Documents',linksArray[indexCounter-1])
         row=printPdfSectionIntroduction(inputData,pdf,indexCounter,'Recent Documents',linksArray[indexCounter-1],190)
         printPdfSectionContent(staticVariables.recentDocumentsData,pdf,row+10,cellWidth1)
 
@@ -416,7 +356,6 @@ def pdfGenerator(fileName):
         inputData.append("The information below shows list of applications recently accessed on the machine. The documents are divided into multiple categorises")
         inputData.append("by file type or extension. Last access date time against each application showcases the last time application was used on the machine.")
         indexCounter=indexCounter+1
-        #printPdfContent(staticVariables.recentAppsData,pdf,indexCounter,'Recent Applications',linksArray[indexCounter-1])
         row=printPdfSectionIntroduction(inputData,pdf,indexCounter,'Recent Applications',linksArray[indexCounter-1],190)
         printPdfSectionContent(staticVariables.recentAppsData,pdf,row+10,cellWidth1)
 
@@ -426,12 +365,10 @@ def pdfGenerator(fileName):
         inputData.append("The information below shows web addresses that have been previously visited by the user. Last write time denotes the time when the")
         inputData.append("last visited url was typed.")
         indexCounter=indexCounter+1
-        #printPdfContent(staticVariables.webUrlsData,pdf,indexCounter,'Recent Web URLS',linksArray[indexCounter-1])
         row=printPdfSectionIntroduction(inputData,pdf,indexCounter,'Recent Web URLS',linksArray[indexCounter-1],190)
         printPdfSectionContent(staticVariables.webUrlsData,pdf,row+10,cellWidth1)
 
     pdf.output(fileName)
-    #pdf.output("test.pdf")
     openPopup("PDF File Created","Report Generated Successfully","14","bold")
 
 #This function is to trigger perl plugin to retrieve installed software list and print to result section 
@@ -441,32 +378,29 @@ def uninstallFunction(hivePath):
 
         process = subprocess.Popen(staticVariables.regRipperPath+hivePath+' -p installedapplications', 
                                stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
-        #output = process.stdout.readlines()
-        counter=1
-        #textarea.configure(font=('Calibri','14','bold'))
+
         textarea.insert('end',"\nINSTALLED SOFTWARES \n")
         textarea.insert('end',"\nList of software products installed on the machine are as follows according to date and time (latest first):\n")
-        #response.append("\nList of software products installed on the computer are as follows according to date and time (latest first):\n")
-        processTemp=process
-        if(process.stdout.seekable()==TRUE):
-            
-            textarea.insert('end',"--------------------------------------------------------------------------------\n")
-            #response.append("--------------------------------------------------------------------------------\n")
-            textarea.insert('end',"  INSTALL DATE TIME                   SOFTWARE                                                              \n")
-            response.append("@@@@@INSTALL DATE TIME|SOFTWARE                                                              \n")
-            textarea.insert('end',"--------------------------------------------------------------------------------\n")
-            #response.append("--------------------------------------------------------------------------------\n")
-            counter=counter + 1
-            response.append
-            for output in process.stdout.readlines():
-                #textarea.configure(font=('Calibri','10'))
-                textarea.insert('end',"  "+output.replace("|"," : "))
-                response.append(output)
-            textarea.insert('end',"================================================================================\n")
-        else:
+
+        index=0
+        for output in process.stdout.readlines():
+            if(index==0):
+                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+
+                textarea.insert('end',"  INSTALL DATE TIME                   SOFTWARE                                                              \n")
+                response.append("@@@@@INSTALL DATE TIME|SOFTWARE                                                              \n")
+                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+
+
+            textarea.insert('end',"  "+output.replace("|"," : "))
+            response.append(output)
+            index=index+1
+        if(index==0):
             textarea.insert('end',"\nNo information found.\n")
-            textarea.insert('end',"================================================================================\n")
+            textarea.insert('end',"\n================================================================================\n")
             response.append("No information found.|")
+        else:
+            textarea.insert('end',"\n================================================================================\n")
     else:
         openPopup("ERROR - SOFTWARE HIVE FILE","SOFTWARE Hive File Not Found","14","bold")
 
@@ -478,33 +412,32 @@ def usbStoreFunction(hivePath):
     if(checkPath(hivePath)==TRUE):
         process = subprocess.Popen(staticVariables.regRipperPath+hivePath+' -p usbstorage', 
                                stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
-        #output = process.stdout.readlines()
         counter=1
         textarea.insert('end',"\nUSB DEVICES \n")
         textarea.insert('end',"\nThe information below shows the list of USB devices previously attached to the machine. Details are provided as below:\n")
-        #response.append("\nThe information below shows the list of USB devices previous attached to the machine. Details are provided as below:\n")
-        processTemp=process
-        if(process.stdout.seekable()==TRUE):
-            #process.stdout.seek(0,0)  
-            for output in process.stdout.readlines():
+
+        index=0
+        for output in process.stdout.readlines():
         
-                if(output.count('USB Device Name')>0):
-                    #textarea.configure(font=('Calibri','14','bold'))
-                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
-                    #response.append("--------------------------------------------------------------------------------\n")
-                    textarea.insert('end',"                          USB DEVICE - "+str(counter)+"\n")
-                    response.append("#####                                              USB DEVICE - "+str(counter)+"\n")
-                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
-                    #response.append("--------------------------------------------------------------------------------\n")
-                    counter=counter + 1
-                #textarea.configure(font=('Calibri','10'))
-                textarea.insert('end',"  "+output.replace("|"," : "))
-                response.append(output)
-            textarea.insert('end',"================================================================================\n")
-        else:
+            if(output.count('USB Device Name')>0):
+
+                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+
+                textarea.insert('end',"                          USB DEVICE - "+str(counter)+"\n")
+                response.append("#####                                              USB DEVICE - "+str(counter)+"\n")
+                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+
+                counter=counter + 1
+
+            textarea.insert('end',"  "+output.replace("|"," : "))
+            response.append(output)
+            index=index+1
+        if(index==0):
             textarea.insert('end',"\nNo information found.\n")
-            textarea.insert('end',"================================================================================\n")
+            textarea.insert('end',"\n================================================================================\n")
             response.append("No information found.|")
+        else:
+            textarea.insert('end',"\n================================================================================\n")
     else:
         openPopup("ERROR - SYSTEM HIVE FILE","SYSTEM Hive File Not Found","14","bold")
     return response
@@ -515,30 +448,31 @@ def winverFunction(hivePath):
     if(checkPath(hivePath)==TRUE):
         process = subprocess.Popen(staticVariables.regRipperPath+hivePath+' -p windowsversion', 
                                stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
-        #output = process.stdout.readlines()
-        counter=1
-        #textarea.configure(font=('Calibri','14','bold'))
+
+        
+
         textarea.insert('end',"\nOPERATING SYSTEM \n")
         textarea.insert('end',"\nThe information below shows the Windows Operating system Product name, release version, Composition Edition Id which is the edition upon which the current edition is derived from/based on, registered owner of the Operating system operational on the machine, and installation date and time of OS.\n")
-        #response.append("\nDetails of the computer operating system:\n")
-        processTemp=process
-        if(process.stdout.seekable()==TRUE):
-            textarea.insert('end',"--------------------------------------------------------------------------------\n")
-            #response.append("--------------------------------------------------------------------------------\n")
-            textarea.insert('end',"  PROPERTY                    DESCRIPTION                                                              \n")
-            response.append("@@@@@PROPERTY|DESCRIPTION                                                              \n")
-            textarea.insert('end',"--------------------------------------------------------------------------------\n")
-            #response.append("--------------------------------------------------------------------------------\n")
-            counter=counter + 1
-            for output in process.stdout.readlines():
-                #textarea.configure(font=('Calibri','10'))
-                textarea.insert('end',"  "+output.replace("|"," : "))
-                response.append(output)
-            textarea.insert('end',"================================================================================\n")
-        else:
+
+        index=0
+        for output in process.stdout.readlines():
+            if(index==0):
+                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+
+                textarea.insert('end',"  PROPERTY                    DESCRIPTION                                                              \n")
+                response.append("@@@@@PROPERTY|DESCRIPTION                                                              \n")
+                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+
+            textarea.insert('end',"  "+output.replace("|"," : "))
+            response.append(output)
+            index=index+1
+            
+        if(index==0):
             textarea.insert('end',"\nNo information found.\n")
-            textarea.insert('end',"================================================================================\n")
+            textarea.insert('end',"\n================================================================================\n")
             response.append("No information found.|")
+        else:
+            textarea.insert('end',"\n================================================================================\n")
     else:
         openPopup("ERROR - SOFTWARE HIVE FILE","SOFTWARE Hive File Not Found","14","bold")
     return response
@@ -549,7 +483,7 @@ def userFunction(hivePath):
     if(checkPath(hivePath)==TRUE):
         process = subprocess.Popen(staticVariables.regRipperPath+hivePath+' -p userdetails', 
                                stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
-        #output = process.stdout.readlines()
+
         counter=1
         textarea.insert('end',"\nUSER ACCOUNTS \n")
         textarea.insert('end',"\nThe information below shows user accounts present on the machine. Details include:\n")
@@ -561,28 +495,27 @@ def userFunction(hivePath):
         textarea.insert('end',"\nLast Login Date: Last Login date will shows as 'Account used actively' if account is actively used by the user. The last login date will have a time stamp only if the account has not been logged on since a while as in the case of 'Administrator' user.\n")
         textarea.insert('end',"\nPassword Reset Date : Date and time when account password was last reset.\n")
         textarea.insert('end',"\nPassword Setting : This setting shows if password is set to expire after a certain time period or not.\n")
-        processTemp=process
-        if(process.stdout.seekable()==TRUE):        
-            #response.append("\nList of user accounts present on the system:\n")
-            for output in process.stdout.readlines():
-        
-                if(output.count('Username')>0):
-                    #textarea.configure(font=('Calibri','14','bold'))
-                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
-                    #response.append("--------------------------------------------------------------------------------\n")
-                    textarea.insert('end',"                          User Details - "+str(counter)+"\n")
-                    response.append("#####                                User Details - "+str(counter)+"\n")
-                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
-                    #response.append("--------------------------------------------------------------------------------\n")
-                    counter=counter + 1
-                #textarea.configure(font=('Calibri','10'))
-                textarea.insert('end',"  "+output.replace("|"," : "))
-                response.append(output)
-            textarea.insert('end',"================================================================================\n")
-        else:
+        index=0
+        for output in process.stdout.readlines():
+            if(output.count('Username')>0):
+
+                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+
+                textarea.insert('end',"                          User Details - "+str(counter)+"\n")
+                response.append("#####                                User Details - "+str(counter)+"\n")
+                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+
+                counter=counter + 1
+
+            textarea.insert('end',"  "+output.replace("|"," : "))
+            response.append(output)
+            index=index+1
+        if(index==0):
             textarea.insert('end',"\nNo information found.\n")
-            textarea.insert('end',"================================================================================\n")
+            textarea.insert('end',"\n================================================================================\n")
             response.append("No information found.|")
+        else:
+            textarea.insert('end',"\n================================================================================\n")
     else:
         openPopup("ERROR - SAM HIVE FILE","SAM Hive File Not Found","14","bold")
     return response
@@ -593,30 +526,29 @@ def networkCardsFunction(hivePath):
     if(checkPath(hivePath)==TRUE):
         process = subprocess.Popen(staticVariables.regRipperPath+hivePath+' -p networkcards', 
                                stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
-        #output = process.stdout.readlines()
-        counter=1
-        #textarea.configure(font=('Calibri','14','bold'))
+
         textarea.insert('end',"\nNETWORK CARDS \n")
         textarea.insert('end',"\nThe information below shows the network cards that were in use on this machine. The result can show two types of network cards; Ethernet (wired) or wireless interface. It also indicates the date and time when these cards were last used.\n")
-        #response.append("\nList of network card used on the computer:\n")
-        processTemp=process
-        if(process.stdout.seekable()==TRUE):    
-            textarea.insert('end',"--------------------------------------------------------------------------------\n")
-            #response.append("--------------------------------------------------------------------------------\n")
-            textarea.insert('end',"  NETWORK CARD NAME                                   LAST UPDATE DATE TIME                     \n")
-            response.append("@@@@@NETWORK CARD NAME|LAST UPDATE DATE TIME                     \n")
-            textarea.insert('end',"--------------------------------------------------------------------------------\n")
-            #response.append("--------------------------------------------------------------------------------\n")
-            counter=counter + 1
-            for output in process.stdout.readlines():
-                #textarea.configure(font=('Calibri','10'))
-                textarea.insert('end',"  "+output.replace("|","  "))
-                response.append(output)
-            textarea.insert('end',"================================================================================\n")
-        else:
+        index=0
+        for output in process.stdout.readlines(): 
+            if(index==0):
+                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+
+                textarea.insert('end',"  NETWORK CARD NAME                                   LAST UPDATE DATE TIME                     \n")
+                response.append("@@@@@NETWORK CARD NAME|LAST UPDATE DATE TIME                     \n")
+                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+
+            textarea.insert('end',"  "+output.replace("|","  "))
+            response.append(output)
+            index=index+1
+            
+        if(index==0):
+
             textarea.insert('end',"\nNo information found.\n")
-            textarea.insert('end',"================================================================================\n")
+            textarea.insert('end',"\n================================================================================\n")
             response.append("No information found.|")
+        else:
+            textarea.insert('end',"\n================================================================================\n")
     else:
         openPopup("ERROR - SOFTWARE HIVE FILE","SOFTWARE Hive File Not Found")
     return response
@@ -635,33 +567,28 @@ def groupFunction(hivePath):
         textarea.insert('end',"\nLast Updated: Demonstrates when the use group was last modified. For instance, additional or removal of users in the group will be considered as a modification to the group.\n")
         textarea.insert('end',"\nGroup Description: Describes the access level of the group.\n")
         textarea.insert('end',"\nUsers: The user SIDs or Security Identifiers for the user accounts are displayed under Users. When an account or group is established, the system generates the SID that identifies that specific account or group. A Comprehensive list and descriptions of well-known SIDs can be found here for further analysis - https://docs.microsoft.com/en-us/windows/security/identity-protection/access-control/security-identifiers.\n")
-        #response.append("\nList of user groups present on the system:\n")
-        processTemp=process
-        if(process.stdout.seekable()==TRUE):
-            for output in process.stdout.readlines():
-        
-                if(output.count('Group Name')>0):
-                    #textarea.configure(font=('Calibri','14','bold'))
-                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
-                    #response.append("--------------------------------------------------------------------------------\n")
-                    textarea.insert('end',"                          Group Details - "+str(counter)+"\n")
-                    response.append("#####                                  Group Details - "+str(counter)+"\n")
-                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
-                    #response.append("--------------------------------------------------------------------------------\n")
-                    counter=counter + 1
-                #textarea.configure(font=('Calibri','10'))
-                textarea.insert('end',"  "+output.replace("|"," : "))
-                outputSplit = output.partition('|')
-                if(len(outputSplit[2])>119):
-                    response.append(outputSplit[0]+outputSplit[1]+outputSplit[2][0:120])
-                    response.append(" |"+outputSplit[2][120:-1])
-                else:
-                    response.append(output)
-            textarea.insert('end',"================================================================================\n")
-        else:
+        index=0
+        for output in process.stdout.readlines():
+            if(output.count('Group Name')>0):
+                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+                textarea.insert('end',"                          Group Details - "+str(counter)+"\n")
+                response.append("#####                                  Group Details - "+str(counter)+"\n")
+                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+                counter=counter + 1
+            textarea.insert('end',"  "+output.replace("|"," : "))
+            outputSplit = output.partition('|')
+            if(len(outputSplit[2])>119):
+                response.append(outputSplit[0]+outputSplit[1]+outputSplit[2][0:120])
+                response.append(" |"+outputSplit[2][120:-1])
+            else:
+                response.append(output)
+            index=index+1
+        if(index==0):
             textarea.insert('end',"\nNo information found.\n")
-            textarea.insert('end',"================================================================================\n")
+            textarea.insert('end',"\n================================================================================\n")
             response.append("No information found.|")
+        else:
+            textarea.insert('end',"\n================================================================================\n")
     else:
         openPopup("ERROR - SAM HIVE FILE","SAM Hive File Not Found","14","bold")
     return response
@@ -672,9 +599,9 @@ def dhcpFunction(hivePath):
     if(checkPath(hivePath)==TRUE):
         process = subprocess.Popen(staticVariables.regRipperPath+hivePath+' -p dhcpinformation', 
                                stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
-        #output = process.stdout.readlines()
+
         counter=1
-        #textarea.configure(font=('Calibri','14','bold'))
+
         textarea.insert('end',"\nDHCP INFORMATION \n")
         textarea.insert('end',"\nDHCP is the Dynamic Host Control Protocol that is responsible for allocating IP addresses to computers on a network. The information below explains the attributes associated with DHCP:\n")
         textarea.insert('end',"\nAdapter: Windows provided unique ID every time DHCP assigns a new IP to the machine\n")
@@ -686,28 +613,27 @@ def dhcpFunction(hivePath):
         textarea.insert('end',"\nDHCP Terminate Time: Time when DHCP lease will expire.\n")
         textarea.insert('end',"\nDHCP default gateway: The router's IP which was used to connect to outside networks such as the internet.\n")
         
-        processTemp=process
-        if(process.stdout.seekable()==TRUE):
-            #response.append("\nDetermining the DHCP information:\n")
-            #response.append("\nDHCP is the Dynamic Host Control Protocol that is responsible for allocating IP addresses to computers on a network\n")
-            for output in process.stdout.readlines():
-                if(output.count('Adapter')>0):
-                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
-                    #response.append("--------------------------------------------------------------------------------\n")
-                    textarea.insert('end',"                          ADAPTER - "+str(counter)+"\n")
-                    response.append("#####                                 ADAPTER - "+str(counter)+"\n")
-                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
-                    #response.append("--------------------------------------------------------------------------------\n")
-                    counter=counter + 1
-        
-                #textarea.configure(font=('Calibri','10'))
-                textarea.insert('end',"  "+output.replace("|"," : "))
-                response.append(output)
-            textarea.insert('end',"================================================================================\n")
-        else:
+        index=0
+        for output in process.stdout.readlines():
+            if(output.count('Adapter')>0):
+                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+
+                textarea.insert('end',"                          ADAPTER - "+str(counter)+"\n")
+                response.append("#####                                 ADAPTER - "+str(counter)+"\n")
+                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+
+                counter=counter + 1
+
+            textarea.insert('end',"  "+output.replace("|"," : "))
+            response.append(output)
+            index=index+1
+            
+        if(index==0):
             textarea.insert('end',"\nNo information found.\n")
-            textarea.insert('end',"================================================================================\n")
+            textarea.insert('end',"\n================================================================================\n")
             response.append("No information found.|")
+        else:
+            textarea.insert('end',"\n================================================================================\n")
     else:
         openPopup("ERROR - SYSTEM HIVE FILE","SYSTEM Hive File Not Found","14","bold")
     return response
@@ -718,30 +644,28 @@ def timezoneFunction(hivePath):
     if(checkPath(hivePath)==TRUE):
         process = subprocess.Popen(staticVariables.regRipperPath+hivePath+' -p timezonedetails', 
                                stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
-        #output = process.stdout.readlines()
-        counter=1
-        #textarea.configure(font=('Calibri','14','bold'))
+
         textarea.insert('end',"\nCOMPUTER TIMEZONE \n")
         textarea.insert('end',"\nTimezone defined for this machine is:\n")
-        #response.append("\nTimezone defined for this computer was:\n")
-        processTemp=process
-        if(process.stdout.seekable()==TRUE):
-            textarea.insert('end',"--------------------------------------------------------------------------------\n")
-            #response.append("--------------------------------------------------------------------------------\n")
-            textarea.insert('end',"  PROPERTY               DESCRIPTION                                                              \n")
-            response.append("@@@@@PROPERTY|DESCRIPTION                                                              \n")
-            textarea.insert('end',"--------------------------------------------------------------------------------\n")
-            #response.append("--------------------------------------------------------------------------------\n")
-            counter=counter + 1
-            for output in process.stdout.readlines():
-                #textarea.configure(font=('Calibri','10'))
-                textarea.insert('end',"  "+output.replace("|"," : "))
-                response.append(output)
-            textarea.insert('end',"================================================================================\n")
-        else:
+
+        index=0
+        for output in process.stdout.readlines():
+            if(index==0):
+                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+                textarea.insert('end',"  PROPERTY               DESCRIPTION                                                              \n")
+                response.append("@@@@@PROPERTY|DESCRIPTION                                                              \n")
+                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+
+            textarea.insert('end',"  "+output.replace("|"," : "))
+            response.append(output)
+            index=index+1
+            
+        if(index==0):
             textarea.insert('end',"\nNo information found.\n")
-            textarea.insert('end',"================================================================================\n")
+            textarea.insert('end',"\n================================================================================\n")
             response.append("No information found.|")
+        else:
+            textarea.insert('end',"\n================================================================================\n")
     else:
         openPopup("ERROR - SYSTEM HIVE FILE","SYSTEM Hive File Not Found","14","bold")
     return response
@@ -752,30 +676,28 @@ def shutdownFunction(hivePath):
     if(checkPath(hivePath)==TRUE):
         process = subprocess.Popen(staticVariables.regRipperPath+hivePath+' -p shutdowndetails', 
                                stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
-        #output = process.stdout.readlines()
-        counter=1
-        #textarea.configure(font=('Calibri','14','bold'))
+
         textarea.insert('end',"\nSHUTDOWN TIME \n")
         textarea.insert('end',"\nLast System shutdown time is as follows::\n")
-        #response.append("\nLast System shutdown time:\n")
-        processTemp=process
-        if(process.stdout.seekable()==TRUE):
-            textarea.insert('end',"--------------------------------------------------------------------------------\n")
-            #response.append("--------------------------------------------------------------------------------\n")
-            textarea.insert('end',"  PROPERTY               DESCRIPTION                                                              \n")
-            response.append("@@@@@PROPERTY|DESCRIPTION                                                              \n")
-            textarea.insert('end',"--------------------------------------------------------------------------------\n")
-            #response.append("--------------------------------------------------------------------------------\n")
-            counter=counter + 1
-            for output in process.stdout.readlines():
-                #textarea.configure(font=('Calibri','10'))
-                textarea.insert('end',"  "+output.replace("|"," : "))
-                response.append(output)
-            textarea.insert('end',"================================================================================\n")
-        else:
+        index=0
+        for output in process.stdout.readlines():
+            if(index==0):
+                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+
+                textarea.insert('end',"  PROPERTY               DESCRIPTION                                                              \n")
+                response.append("@@@@@PROPERTY|DESCRIPTION                                                              \n")
+                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+
+            textarea.insert('end',"  "+output.replace("|"," : "))
+            response.append(output)
+            index=index+1
+            
+        if(index==0):
             textarea.insert('end',"\nNo information found.\n")
-            textarea.insert('end',"================================================================================\n")
+            textarea.insert('end',"\n================================================================================\n")
             response.append("No information found.|")
+        else:
+            textarea.insert('end',"\n================================================================================\n")
     else:
         openPopup("ERROR - SYSTEM HIVE FILE","SYSTEM Hive File Not Found","14","bold")
     return response
@@ -786,32 +708,29 @@ def recentDocumentsFunction(hivePath):
     if(checkPath(hivePath)==TRUE):
         process = subprocess.Popen(staticVariables.regRipperPath+hivePath+' -p recentdocuments', 
                                stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
-        #output = process.stdout.readlines()
-        counter=1
-        #textarea.configure(font=('Calibri','14','bold'))
+
         textarea.insert('end',"\nRECENT DOCUMENTS \n")
         textarea.insert('end',"\nThe information below shows list of documents recently accessed on the machine. The documents are divided into multiple categorises by file type or extension. Last write time under each category of document showcases the last time that any document of that was modified.\n")
-        #response.append("\nRecent documents used on the computer:\n")
-        processTemp=process
-        if(process.stdout.seekable()==TRUE):
-            for output in process.stdout.readlines():
-                if(output.count('Type/Extension')>0):
-                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
-                    #response.append("--------------------------------------------------------------------------------\n")
-                    textarea.insert('end',"                          Type/Extension - "+output.partition('|')[2])
-                    response.append("#####                             Type/Extension - "+output.partition('|')[2])
-                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
-                    #response.append("--------------------------------------------------------------------------------\n")
-                    counter=counter + 1
-        
-                else: #textarea.configure(font=('Calibri','10'))
-                    textarea.insert('end',"  "+output.replace("|"," : "))
-                    response.append(output)
-            textarea.insert('end',"================================================================================\n")
-        else:
+
+        index=0
+        for output in process.stdout.readlines():
+            
+            if(output.count('Type/Extension')>0):
+                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+
+                textarea.insert('end',"                          Type/Extension - "+output.partition('|')[2])
+                response.append("#####                             Type/Extension - "+output.partition('|')[2])
+                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+            else:
+                textarea.insert('end',"  "+output.replace("|"," : "))
+                response.append(output)
+            index=index+1
+        if(index==0):
             textarea.insert('end',"\nNo information found.\n")
-            textarea.insert('end',"================================================================================\n")
+            textarea.insert('end',"\n================================================================================\n")
             response.append("No information found.|")
+        else:
+            textarea.insert('end',"\n================================================================================\n")
     else:
         openPopup("ERROR - NTUSER.DAT HIVE FILE","NTUSER.DAT Hive File Not Found","14","bold")
     return response
@@ -823,30 +742,28 @@ def recentAppsFunction(hivePath):
 
         process = subprocess.Popen(staticVariables.regRipperPath+hivePath+' -p recentapplications', 
                                stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
-        #output = process.stdout.readlines()
-        counter=1
-        #textarea.configure(font=('Calibri','14','bold'))
+
         textarea.insert('end',"\n RECENT APPLICATIONS \n")
         textarea.insert('end',"\nThe information below shows list of applications recently accessed on the machine. The documents are divided into multiple categorises by file type or extension. Last access date time against each application showcases the last time application was used on the machine.\n")
-        #response.append("\nList of all recently used applications:\n")
-        processTemp=process
-        if(process.stdout.seekable()==TRUE):
-            textarea.insert('end',"--------------------------------------------------------------------------------\n")
-            #response.append("--------------------------------------------------------------------------------\n")
-            textarea.insert('end',"  LAST ACCESS DATE TIME                   APPLICATIONS                                                             \n")
-            response.append("@@@@@LAST ACCESS DATE TIME|APPLICATIONS                                                             \n")
-            textarea.insert('end',"--------------------------------------------------------------------------------\n")
-            #response.append("--------------------------------------------------------------------------------\n")
-            counter=counter + 1
-            for output in process.stdout.readlines():
-                #textarea.configure(font=('Calibri','10'))
-                textarea.insert('end',"  "+output.replace("|"," : "))
-                response.append(output)
-            textarea.insert('end',"================================================================================\n")
-        else:
+
+        index=0
+        for output in process.stdout.readlines():
+            if(index==0):
+                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+
+                textarea.insert('end',"  LAST ACCESS DATE TIME                   APPLICATIONS                                                             \n")
+                response.append("@@@@@LAST ACCESS DATE TIME|APPLICATIONS                                                             \n")
+                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+            textarea.insert('end',"  "+output.replace("|"," : "))
+            response.append(output)
+            index=index+1
+            
+        if(index==0):
             textarea.insert('end',"\nNo information found.\n")
-            textarea.insert('end',"================================================================================\n")
+            textarea.insert('end',"\n================================================================================\n")
             response.append("No information found.|")
+        else:
+            textarea.insert('end',"\n================================================================================\n")
     else:
         openPopup("ERROR - NTUSER.DAT HIVE FILE","NTUSER.DAT Hive File Not Found","14","bold")
     return response
@@ -858,30 +775,28 @@ def webUrlsFunction(hivePath):
     if(checkPath(hivePath)==TRUE):
         process = subprocess.Popen(staticVariables.regRipperPath+hivePath+' -p urlstyped', 
                                stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
-        #output = process.stdout.readlines()
-        counter=1
-        #textarea.configure(font=('Calibri','14','bold'))
+
         textarea.insert('end',"\n RECENT WEB URLs \n")
         textarea.insert('end',"\nThe information below shows web addresses that have been previously visited by the user. Last write time denotes the time when the last visited url was typed.\n")
-        processTemp=process
-        if(process.stdout.seekable()==TRUE):
-            #response.append("\nWeb addresses that this specific user has previously typed in the browser:\n")
-            textarea.insert('end',"--------------------------------------------------------------------------------\n")
-            #response.append("--------------------------------------------------------------------------------\n")
-            textarea.insert('end',"  PROPERTY          DESCRIPTION                                                              \n")
-            response.append("@@@@@PROPERTY|DESCRIPTION                                                              \n")
-            textarea.insert('end',"--------------------------------------------------------------------------------\n")
-            #response.append("--------------------------------------------------------------------------------\n")
-            counter=counter + 1
-            for output in process.stdout.readlines():
-                #textarea.configure(font=('Calibri','10'))
-                textarea.insert('end',"  "+output.replace("|"," : "))
-                response.append(output)
-            textarea.insert('end',"================================================================================\n")
-        else:
+        index=0
+        for output in process.stdout.readlines():
+            if(index==0):
+                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+
+                textarea.insert('end',"  PROPERTY          DESCRIPTION                                                              \n")
+                response.append("@@@@@PROPERTY|DESCRIPTION                                                              \n")
+                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+
+            textarea.insert('end',"  "+output.replace("|"," : "))
+            response.append(output)
+            index=index+1
+            
+        if(index==0):
             textarea.insert('end',"\nNo information found.\n")
-            textarea.insert('end',"================================================================================\n")
+            textarea.insert('end',"\n================================================================================\n")
             response.append("No information found.|")
+        else:
+            textarea.insert('end',"\n================================================================================\n")
     else:
         openPopup("ERROR - NTUSER.DAT HIVE FILE","NTUSER.DAT Hive File Not Found","14","bold")
     return response
@@ -892,7 +807,8 @@ def fileSearchFunction(rootPath,fileName):
     for root, dirs, files in os.walk(rootPath):
         if fileName in files:
             #print(os.path.join(root))
-            fileResearchResult.append(os.path.join(root,fileName))
+            if(str(root).__contains__("System32\config") == FALSE):
+                fileResearchResult.append(os.path.join(root,fileName))
         
     return fileResearchResult            
 
@@ -907,7 +823,6 @@ def browse_dialogue():
     registryPath_field.delete(0,"end")
     registryPath_field.insert(0,folderName)
     registryPath_field.configure(state="readonly")
-    #print(folderName)
     staticVariables.softwareFilePathArray=fileSearchFunction(folderName,"SOFTWARE")
     staticVariables.systemFilePathArray=fileSearchFunction(folderName,"SYSTEM")
     staticVariables.samFilePathArray=fileSearchFunction(folderName,"SAM")
@@ -916,10 +831,6 @@ def browse_dialogue():
 
 
 def validateFilePath():
-    #print(staticVariables.selectedSamLocation.get())
-    #print(staticVariables.selectedSystemLocation.get())
-    #print(staticVariables.selectedNtuserLocation.get())
-    #print(staticVariables.selectedSoftwareLocation.get())
     initialiseForm()
     try:
         software_hive_output['text']=staticVariables.selectedSoftwareLocation.get()
@@ -954,7 +865,6 @@ def fileDialogue():
         openPopup("ERROR - No Artefacts Selected", "No artefacts selected for report generation. Please select at least one artefact for report generation.","11","bold")
     else:
         root.filename =  filedialog.asksaveasfilename(initialdir = "./",title = "Save as PDF file",filetypes = [("pdf files", '*.pdf')], initialfile ="RegistryAnalysisReport_"+time.strftime('%Y%m%d-%H%M%S')+".pdf")
-        #print (root.filename)
         if(len(root.filename)>0):
             pdfGenerator(root.filename)
 
@@ -973,8 +883,6 @@ def openPopupFiles(softwareFile,systemFile,samFile,ntuserFile):
        heading_Select_Options.grid(row=0, column=1)
        frame_software = Frame(top, highlightbackground="dark grey", highlightthickness=10, padx=105, pady=10)
        frame_software.place(relx=0.01, rely=0.08)
-       #software_location1 = Label(frame_software, text="First Software hive file location ", bg="light blue")
-       #software_location2 = Label(frame_software, text="Second Software hive file location", bg="light blue")
 
        if(len(softwareFile)!=0):
            staticVariables.selectedSoftwareLocation=StringVar()
@@ -996,8 +904,6 @@ def openPopupFiles(softwareFile,systemFile,samFile,ntuserFile):
        heading_Select_Options.grid(row=0, column=1)
        frame_system = Frame(top, highlightbackground="dark grey", highlightthickness=10, padx=105, pady=10)
        frame_system.place(relx=0.01, rely=0.31)
-       #software_location1 = Label(frame_software, text="First Software hive file location ", bg="light blue")
-       #software_location2 = Label(frame_software, text="Second Software hive file location", bg="light blue")
        if(len(systemFile)!=0):
            staticVariables.selectedSystemLocation=StringVar()
            for index,systemFileName in enumerate(systemFile):
@@ -1017,8 +923,6 @@ def openPopupFiles(softwareFile,systemFile,samFile,ntuserFile):
        heading_Select_Options.grid(row=0, column=1)
        frame_sam = Frame(top, highlightbackground="dark grey", highlightthickness=10, padx=105, pady=10)
        frame_sam.place(relx=0.01, rely=0.55)
-       #software_location1 = Label(frame_software, text="First Software hive file location ", bg="light blue")
-       #software_location2 = Label(frame_software, text="Second Software hive file location", bg="light blue")
        if(len(samFile)!=0):
            staticVariables.selectedSamLocation=StringVar()
            for index, samFileName in enumerate(samFile):
@@ -1040,8 +944,6 @@ def openPopupFiles(softwareFile,systemFile,samFile,ntuserFile):
        heading_Select_Options.grid(row=0, column=1)
        frame_ntuser = Frame(top, highlightbackground="dark grey", highlightthickness=10, padx=105, pady=10)
        frame_ntuser.place(relx=0.01, rely=0.79)
-       #software_location1 = Label(frame_software, text="First Software hive file location ", bg="light blue")
-       #software_location2 = Label(frame_software, text="Second Software hive file location", bg="light blue")
        if(len(ntuserFile)!=0):
            staticVariables.selectedNtuserLocation=StringVar()
            for index, ntuserFileName in enumerate(ntuserFile):
@@ -1138,34 +1040,32 @@ def comboBoxControlMain():
 
 
     if(checkPath(staticVariables.systemFilePath)==TRUE | checkPath(staticVariables.softwareFilePath)==TRUE | checkPath(staticVariables.samFilePath)==TRUE | checkPath(staticVariables.ntuserFilePath)==TRUE):
-               
-        #print(usbCheckboxInput.get())
-        #print(osCheckboxInput.get())
+
         if(usbCheckboxInput.get()=="On"):
-            staticVariables.usbData=usbStoreFunction(re.escape(staticVariables.systemFilePath))
+            staticVariables.usbData=usbStoreFunction(staticVariables.systemFilePath)
         if(osCheckboxInput.get()=="On"):
-            staticVariables.winVerData=winverFunction(re.escape(staticVariables.softwareFilePath))
+            staticVariables.winVerData=winverFunction(staticVariables.softwareFilePath)
         if(networkCardsCheckboxInput.get()=="On"):
-            staticVariables.networkCardsData=networkCardsFunction(re.escape(staticVariables.softwareFilePath))
+            staticVariables.networkCardsData=networkCardsFunction(staticVariables.softwareFilePath)
         if(installedApplicationsCheckboxInput.get()=="On"):
-            staticVariables.uninstallData=uninstallFunction(re.escape(staticVariables.softwareFilePath))
+            staticVariables.uninstallData=uninstallFunction(staticVariables.softwareFilePath)
         if(userAccountsCheckboxInput.get()=="On"):
-            staticVariables.userData=userFunction(re.escape(staticVariables.samFilePath))
+            staticVariables.userData=userFunction(staticVariables.samFilePath)
         
         if(userGroupsCheckboxInput.get()=="On"):
-            staticVariables.groupData=groupFunction(re.escape(staticVariables.samFilePath))
+            staticVariables.groupData=groupFunction(staticVariables.samFilePath)
         if(dhcpCheckboxInput.get()=="On"):
-            staticVariables.dhcpData=dhcpFunction(re.escape(staticVariables.systemFilePath))
+            staticVariables.dhcpData=dhcpFunction(staticVariables.systemFilePath)
         if(timezoneCheckboxInput.get()=="On"):
-           staticVariables.timezoneData= timezoneFunction(re.escape(staticVariables.systemFilePath))
+           staticVariables.timezoneData= timezoneFunction(staticVariables.systemFilePath)
         if(systemShutdownCheckboxInput.get()=="On"):
-            staticVariables.shutdownData=shutdownFunction(re.escape(staticVariables.systemFilePath))
+            staticVariables.shutdownData=shutdownFunction(staticVariables.systemFilePath)
         if(recentDocumentsCheckboxInput.get()=="On"):
-            staticVariables.recentDocumentsData=recentDocumentsFunction(re.escape(staticVariables.ntuserFilePath).replace("\.","."))
+            staticVariables.recentDocumentsData=recentDocumentsFunction(staticVariables.ntuserFilePath)
         if(recentAppsCheckboxInput.get()=="On"):
-            staticVariables.recentAppsData=recentAppsFunction(re.escape(staticVariables.ntuserFilePath).replace("\.","."))
+            staticVariables.recentAppsData=recentAppsFunction(staticVariables.ntuserFilePath)
         if(webUrlsCheckboxInput.get()=="On"):
-            staticVariables.webUrlsData=webUrlsFunction(re.escape(staticVariables.ntuserFilePath).replace("\.","."))
+            staticVariables.webUrlsData=webUrlsFunction(staticVariables.ntuserFilePath)
         
             
         #Off Button    
@@ -1219,10 +1119,7 @@ if __name__ == "__main__":
 
     # User Input section where file location is taken as input
     frame_input = Frame(root, highlightbackground="dark grey", highlightthickness=2, padx=20, pady=20)
-   
-    #frame_input.grid(row=0,column=0,rowspan=2, columnspan=2)
-    #heading = Label(frame_input, text=" ", bg="light blue", font="Calibri")
-    #heading.grid(row=0, column=1)
+  
     registryPath = Label(frame_input, text="Registry Files Location", pady="5", bg="light blue")
     registryPath.grid(row=0, column=0)
     folder_path=""
@@ -1255,9 +1152,7 @@ if __name__ == "__main__":
     Software_hive.grid(row=6, column=0)
     heading_spacefiller1.grid(row=5, column=0)
     System_hive.grid(row=7, column=0)
-    #heading_spacefiller2.grid(row=8, column=0)
     Sam_hive.grid(row=9, column=0)
-    #heading_spacefiller3.grid(row=10, column=0)
     Ntuser_hive.grid(row=11, column=0)
     software_hive_output.grid(row=6, column=1)
     system_hive_output.grid(row=7, column=1)
@@ -1266,7 +1161,6 @@ if __name__ == "__main__":
 
 
 
-    #spacefiller2 = Label(root, text="       ", bg="light blue")
     frame_checkbox = Frame(root, highlightbackground="dark grey", 
     highlightthickness=2, padx=105, pady=2)
     frame_checkbox.place(relx=0.01, rely=0.425)
@@ -1286,10 +1180,6 @@ if __name__ == "__main__":
     webUrlsLabel = Label(frame_checkbox, text="Recent Web URLs", bg="light blue")
     selectall = Label(frame_checkbox, text="Select All", bg="light blue")
 
-    
-
-    # create a Reconnaissance Sub-Technique 1 label
-    #registryHive = Label(root, text="Registry Hive File Path", bg="light blue")
 
     usbCheckboxInput = StringVar()
     osCheckboxInput = StringVar()
@@ -1333,50 +1223,22 @@ if __name__ == "__main__":
 
     
     frame_result = Frame(root, width=480, height=500, highlightbackground="dark grey", highlightthickness=2, padx=5, pady=5)
-    #frame_result = Canvas(root, width=480, height=500, background="dark grey")
     resultsLabel = Label(frame_result, text="RESULTS",font=("Calibri","16"))
     resultsLabel.pack()
 
 
     frame_result.place(relx=0.42, rely=0.01)
 
-    #v_s = Scrollbar(frame_result)
-    #v_s.pack(side=RIGHT, fill=Y)
-
-    #h_s = Scrollbar(frame_result, orient='horizontal')
-    #h_s.pack(side=TOP, fill=X)
-    # Add a Scrollbar(horizontal)
     v=Scrollbar(frame_result, orient='vertical')
     v.pack(side=RIGHT, fill='y')
 
-    # Add a text widget
+
     textarea=Text(frame_result, yscrollcommand=v.set,height=31)
 
-    # Add some text in the text widget
     
     v.config(command=textarea.yview)
-    #textarea.grid(row=1,column=1)
     textarea.pack()
-    
-    
 
-
-    #textarea = Text(frame_result)
-    # Create a scrollbar
-    #scroll_bar = Scrollbar(frame_result)
- 
-    # Pack the scroll bar
-    # Place it to the right side, using tk.RIGHT
-    #scroll_bar.pack(side=RIGHT)
- 
-    # Pack it into our tkinter application
-    # Place the text widget to the left side
-    #textarea.pack(side=TOP, fill=X)
-    #uninstallFunction()
-
-    # grid method is used for placing
-    # the widgets at respective positions
-    # in table like structure .
   
     heading_Select_Options.grid(row=5, column=3)
     usbCheckbox.grid(row=10,column=7)
@@ -1392,10 +1254,7 @@ if __name__ == "__main__":
     recentAppsCheckbox.grid(row=20,column=7)
     webUrlsCheckbox.grid(row=21,column=7)
     selectallCheckbox.grid(row=22,column=7)
-    
 
-    #spacefiller1.grid(row=8,column=0)
-    #spacefiller2.grid(row=1,column=2)
     usbLabel.grid(row=10,column=0)
     osLabel.grid(row=11,column=0)
     networkCardsLabel.grid(row=12,column=0)
@@ -1410,9 +1269,6 @@ if __name__ == "__main__":
     webUrlsLabel.grid(row=21,column=0)
     selectall.grid(row=22,column=0)
 
-
-    
- # Report generation
     frame_report = Frame(root, highlightbackground="dark grey", 
     highlightthickness=2, padx=156, pady=12.5)
     frame_report.place(relx=0.42, rely=0.85)
