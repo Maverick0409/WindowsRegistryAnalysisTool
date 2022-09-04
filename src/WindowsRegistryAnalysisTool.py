@@ -15,6 +15,7 @@ from tkinter import filedialog
 
 import time
 
+#This class is used to define the static variables used in the code
 class staticVariables:
     softwareFilePath=""
     systemFilePath=""
@@ -28,7 +29,7 @@ class staticVariables:
     selectedSoftwareLocation=""
     selectedSystemLocation=""
     selectedNtuserLocation=""
-    regRipperPath="library\\readregistry.exe -r "
+    regRipperPath="..\\library\\readregistry.exe -r "
     usbData=[]
     winVerData=[]
     uninstallData=[]
@@ -43,7 +44,7 @@ class staticVariables:
     webUrlsData=[]
     subprocessWindowConfig=0x08000000
 
-
+#This function sets chapter title for the PDF page for a section
 def chapter_title_Pdf(pdfVar, num, label):
     pdfVar.set_font('Arial', '', 12)
     pdfVar.set_fill_color(200, 220, 255)
@@ -51,7 +52,7 @@ def chapter_title_Pdf(pdfVar, num, label):
     pdfVar.cell(0, 6, 'Section %d : %s' % (num, label), 0, 1, 'L', 1)
     pdfVar.ln(4)
 
-
+#This function writes the data for section using input data passed from parent function
 def printPdfSectionContent(inputData,pdf,startY,cellWidth):
     pdf.set_text_color(0,0,0)
     pdf.set_font("Arial","",8)
@@ -98,7 +99,7 @@ def printPdfSectionContent(inputData,pdf,startY,cellWidth):
                 pdf.set_x=10
                 pdf.set_y=20
         
-
+#This function creates the page with border,title and heading information of particular section
 def printPdfSectionIntroduction(inputData,pdf,chapterNumber,description,link,cellWidth):
     pdf.add_page()
     chapter_title_Pdf(pdf, chapterNumber,description)
@@ -117,6 +118,7 @@ def printPdfSectionIntroduction(inputData,pdf,chapterNumber,description,link,cel
     i=i+5
     return i
 
+#This function creates table of contents with hyperlinks to each section present in the pdf
 def cellTableofContents(index,description,link,pdf,cellWidth):
     
     pdf.set_font("Arial","",10)
@@ -256,10 +258,8 @@ def pdfGenerator(fileName):
         cellWidth1=[40,150]
         inputData.append("The information below shows user accounts present on the machine. Details include:")
         inputData.append("")
-        inputData.append("Username: This username is provided by Windows Operating System. full name if provided at time of account creation, user comment to")
-        inputData.append("indicate if account is managed by system or end user, and account creation date. Username is followed by number within square brackets")
-        inputData.append("such as [501]. It denotes the Relative ID(RID). RID is a number that is generated to uniquely identify an account within a domain.")
-        inputData.append("")
+        inputData.append("Username: This username is provided by Windows Operating System. Username is followed by number within square brackets such as")
+        inputData.append("[501]. It denotes the Relative ID(RID). RID is a number that is generated to uniquely identify an account within a domain.")
         inputData.append("Any group or user created by Microsoft Windows Operating System will have RID less than 1000. Any group or user that the a Microsoft")
         inputData.append("Windows Operating System does not create, such as an account created by the end user has a RID of 1000 or greater by default.")
         inputData.append("")
@@ -487,8 +487,8 @@ def userFunction(hivePath):
         counter=1
         textarea.insert('end',"\nUSER ACCOUNTS \n")
         textarea.insert('end',"\nThe information below shows user accounts present on the machine. Details include:\n")
-        textarea.insert('end',"\nUsername : This username is provided by Windows Operating System. full name if provided at time of account creation, user comment to indicate if account is managed by system or end user, and account creation date. Username is followed by number within square brackets such as [501]. It denotes the Relative ID(RID). RID is a number that is generated to uniquely identify an account within a domain.\n")
-        textarea.insert('end',"\nAny group or user created by Microsoft Windows Operating System will have RID less than 1000. Any group or user that the a Microsoft Windows Operating System does not create, such as an account created by the end user has a RID of 1000 or greater by default.\n")
+        textarea.insert('end',"\nUsername : This username is provided by Windows Operating System.Username is followed by number within square brackets such as [501]. It denotes the Relative ID(RID). RID is a number that is generated to uniquely identify an account within a domain.\n")
+        textarea.insert('end',"Any group or user created by Microsoft Windows Operating System will have RID less than 1000. Any group or user that the a Microsoft Windows Operating System does not create, such as an account created by the end user has a RID of 1000 or greater by default.\n")
         textarea.insert('end',"\nFull name : Full name as provided at the time of account creation.\n")
         textarea.insert('end',"\nUser Comment : Describes the access level and purpose of the user.\n")
         textarea.insert('end',"\nAccount created : Date and time when account had been created.\n")
@@ -819,15 +819,18 @@ def browse_dialogue():
     global folder_path
     folderName = filedialog.askdirectory()
     folderName= folderName.replace("/","\\")
-    registryPath_field.configure(state="normal")
-    registryPath_field.delete(0,"end")
-    registryPath_field.insert(0,folderName)
-    registryPath_field.configure(state="readonly")
-    staticVariables.softwareFilePathArray=fileSearchFunction(folderName,"SOFTWARE")
-    staticVariables.systemFilePathArray=fileSearchFunction(folderName,"SYSTEM")
-    staticVariables.samFilePathArray=fileSearchFunction(folderName,"SAM")
-    staticVariables.ntuserFilePathArray=fileSearchFunction(folderName,"NTUSER.DAT")
-    openPopupFiles(staticVariables.softwareFilePathArray,staticVariables.systemFilePathArray,staticVariables.samFilePathArray,staticVariables.ntuserFilePathArray)
+    if(str(folderName).__contains__("System32\config") == TRUE):
+        openPopup("ERROR - Selected Live Hive Folder", "The tool does not operate on live registry hive files which are continuously updated. Please select another location.","9","bold")
+    else :
+        registryPath_field.configure(state="normal")
+        registryPath_field.delete(0,"end")
+        registryPath_field.insert(0,folderName)
+        registryPath_field.configure(state="readonly")
+        staticVariables.softwareFilePathArray=fileSearchFunction(folderName,"SOFTWARE")
+        staticVariables.systemFilePathArray=fileSearchFunction(folderName,"SYSTEM")
+        staticVariables.samFilePathArray=fileSearchFunction(folderName,"SAM")
+        staticVariables.ntuserFilePathArray=fileSearchFunction(folderName,"NTUSER.DAT")
+        openPopupFiles(staticVariables.softwareFilePathArray,staticVariables.systemFilePathArray,staticVariables.samFilePathArray,staticVariables.ntuserFilePathArray)
 
 
 def validateFilePath():
