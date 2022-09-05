@@ -29,7 +29,7 @@ class staticVariables:
     selectedSoftwareLocation=""
     selectedSystemLocation=""
     selectedNtuserLocation=""
-    regRipperPath="..\\library\\readregistry.exe -r "
+    regRipperPath="library\\readregistry.exe -r "
     usbData=[]
     winVerData=[]
     uninstallData=[]
@@ -819,9 +819,11 @@ def browse_dialogue():
     global folder_path
     folderName = filedialog.askdirectory()
     folderName= folderName.replace("/","\\")
+
+        
     if(str(folderName).__contains__("System32\config") == TRUE):
         openPopup("ERROR - Selected Live Hive Folder", "The tool does not operate on live registry hive files which are continuously updated. Please select another location.","9","bold")
-    else :
+    elif(str(folderName).__len__()!=0):
         registryPath_field.configure(state="normal")
         registryPath_field.delete(0,"end")
         registryPath_field.insert(0,folderName)
