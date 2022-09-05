@@ -376,7 +376,7 @@ def uninstallFunction(hivePath):
     response=[]
     if(checkPath(hivePath)==TRUE):
 
-        process = subprocess.Popen(staticVariables.regRipperPath+hivePath+' -p installedapplications', 
+        process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p installedapplications', 
                                stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
 
         textarea.insert('end',"\nINSTALLED SOFTWARES \n")
@@ -410,7 +410,7 @@ def uninstallFunction(hivePath):
 def usbStoreFunction(hivePath):
     response=[]
     if(checkPath(hivePath)==TRUE):
-        process = subprocess.Popen(staticVariables.regRipperPath+hivePath+' -p usbstorage', 
+        process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p usbstorage', 
                                stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
         counter=1
         textarea.insert('end',"\nUSB DEVICES \n")
@@ -446,7 +446,7 @@ def usbStoreFunction(hivePath):
 def winverFunction(hivePath):
     response=[]
     if(checkPath(hivePath)==TRUE):
-        process = subprocess.Popen(staticVariables.regRipperPath+hivePath+' -p windowsversion', 
+        process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p windowsversion', 
                                stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
 
         
@@ -481,7 +481,7 @@ def winverFunction(hivePath):
 def userFunction(hivePath):
     response=[]
     if(checkPath(hivePath)==TRUE):
-        process = subprocess.Popen(staticVariables.regRipperPath+hivePath+' -p userdetails', 
+        process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p userdetails', 
                                stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
 
         counter=1
@@ -524,7 +524,7 @@ def userFunction(hivePath):
 def networkCardsFunction(hivePath):
     response=[]
     if(checkPath(hivePath)==TRUE):
-        process = subprocess.Popen(staticVariables.regRipperPath+hivePath+' -p networkcards', 
+        process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p networkcards', 
                                stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
 
         textarea.insert('end',"\nNETWORK CARDS \n")
@@ -557,7 +557,7 @@ def networkCardsFunction(hivePath):
 def groupFunction(hivePath):
     response=[]
     if(checkPath(hivePath)==TRUE):
-        process = subprocess.Popen(staticVariables.regRipperPath+hivePath+' -p usergroups', 
+        process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p usergroups', 
                                stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
         #output = process.stdout.readlines()
         counter=1
@@ -597,7 +597,7 @@ def groupFunction(hivePath):
 def dhcpFunction(hivePath):
     response=[]
     if(checkPath(hivePath)==TRUE):
-        process = subprocess.Popen(staticVariables.regRipperPath+hivePath+' -p dhcpinformation', 
+        process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p dhcpinformation', 
                                stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
 
         counter=1
@@ -642,7 +642,7 @@ def dhcpFunction(hivePath):
 def timezoneFunction(hivePath):
     response=[]
     if(checkPath(hivePath)==TRUE):
-        process = subprocess.Popen(staticVariables.regRipperPath+hivePath+' -p timezonedetails', 
+        process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p timezonedetails', 
                                stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
 
         textarea.insert('end',"\nCOMPUTER TIMEZONE \n")
@@ -674,7 +674,7 @@ def timezoneFunction(hivePath):
 def shutdownFunction(hivePath):
     response=[]
     if(checkPath(hivePath)==TRUE):
-        process = subprocess.Popen(staticVariables.regRipperPath+hivePath+' -p shutdowndetails', 
+        process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p shutdowndetails', 
                                stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
 
         textarea.insert('end',"\nSHUTDOWN TIME \n")
@@ -706,7 +706,7 @@ def shutdownFunction(hivePath):
 def recentDocumentsFunction(hivePath):
     response=[]
     if(checkPath(hivePath)==TRUE):
-        process = subprocess.Popen(staticVariables.regRipperPath+hivePath+' -p recentdocuments', 
+        process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p recentdocuments', 
                                stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
 
         textarea.insert('end',"\nRECENT DOCUMENTS \n")
@@ -740,7 +740,7 @@ def recentAppsFunction(hivePath):
     response=[]
     if(checkPath(hivePath)==TRUE):
 
-        process = subprocess.Popen(staticVariables.regRipperPath+hivePath+' -p recentapplications', 
+        process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p recentapplications', 
                                stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
 
         textarea.insert('end',"\n RECENT APPLICATIONS \n")
@@ -773,7 +773,7 @@ def webUrlsFunction(hivePath):
     response=[]
     #print("WebHive Path"+hivePath)
     if(checkPath(hivePath)==TRUE):
-        process = subprocess.Popen(staticVariables.regRipperPath+hivePath+' -p urlstyped', 
+        process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p urlstyped', 
                                stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
 
         textarea.insert('end',"\n RECENT WEB URLs \n")
@@ -814,6 +814,8 @@ def fileSearchFunction(rootPath,fileName):
 
 #Function is used to display browse folder for Hive Search Folder Path
 def browse_dialogue():
+    # Allow user to select a directory and store it in global var
+    # called folder_path
     global folder_path
     folderName = filedialog.askdirectory()
     folderName= folderName.replace("/","\\")
