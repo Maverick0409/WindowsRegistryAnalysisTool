@@ -814,8 +814,6 @@ def fileSearchFunction(rootPath,fileName):
 
 #Function is used to display browse folder for Hive Search Folder Path
 def browse_dialogue():
-    # Allow user to select a directory and store it in global var
-    # called folder_path
     global folder_path
     folderName = filedialog.askdirectory()
     folderName= folderName.replace("/","\\")
