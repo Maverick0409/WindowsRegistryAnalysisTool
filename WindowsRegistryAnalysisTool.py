@@ -374,431 +374,503 @@ def pdfGenerator(fileName):
 #This function is to trigger perl plugin to retrieve installed software list and print to result section 
 def uninstallFunction(hivePath):
     response=[]
-    if(checkPath(hivePath)==TRUE):
+    try:
+        if(checkPath(hivePath)==TRUE):
 
-        process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p installedapplications', 
-                               stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
+            process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p installedapplications', 
+                                   stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
 
-        textarea.insert('end',"\nINSTALLED SOFTWARES \n")
-        textarea.insert('end',"\nList of software products installed on the machine are as follows according to date and time (latest first):\n")
+            textarea.insert('end',"\nINSTALLED SOFTWARES \n")
+            textarea.insert('end',"\nList of software products installed on the machine are as follows according to date and time (latest first):\n")
 
-        index=0
-        for output in process.stdout.readlines():
+            index=0
+            for output in process.stdout.readlines():
+                if(index==0):
+                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
+
+                    textarea.insert('end',"  INSTALL DATE TIME                   SOFTWARE                                                              \n")
+                    response.append("@@@@@INSTALL DATE TIME|SOFTWARE                                                              \n")
+                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
+
+
+                textarea.insert('end',"  "+output.replace("|"," : "))
+                response.append(output)
+                index=index+1
             if(index==0):
-                textarea.insert('end',"--------------------------------------------------------------------------------\n")
-
-                textarea.insert('end',"  INSTALL DATE TIME                   SOFTWARE                                                              \n")
-                response.append("@@@@@INSTALL DATE TIME|SOFTWARE                                                              \n")
-                textarea.insert('end',"--------------------------------------------------------------------------------\n")
-
-
-            textarea.insert('end',"  "+output.replace("|"," : "))
-            response.append(output)
-            index=index+1
-        if(index==0):
-            textarea.insert('end',"\nNo information found.\n")
-            textarea.insert('end',"\n================================================================================\n")
-            response.append("No information found.|")
+                textarea.insert('end',"\nNo information found.\n")
+                textarea.insert('end',"\n================================================================================\n")
+                response.append("No information found.|")
+            else:
+                textarea.insert('end',"\n================================================================================\n")
         else:
-            textarea.insert('end',"\n================================================================================\n")
-    else:
-        openPopup("ERROR - SOFTWARE HIVE FILE","SOFTWARE Hive File Not Found","14","bold")
+            openPopup("ERROR - SOFTWARE HIVE FILE","SOFTWARE Hive File Not Found","14","bold")
+    except:
+        textarea.insert('end',"\nNo information found.\n")
+        textarea.insert('end',"\n================================================================================\n")
+        response.append("No information found.|")
 
     return response
 
 #This function is to trigger perl plugin to retrieve usb devices connected to PC and print to result section 
 def usbStoreFunction(hivePath):
     response=[]
-    if(checkPath(hivePath)==TRUE):
-        process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p usbstorage', 
-                               stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
-        counter=1
-        textarea.insert('end',"\nUSB DEVICES \n")
-        textarea.insert('end',"\nThe information below shows the list of USB devices previously attached to the machine. Details are provided as below:\n")
+    try:
+        if(checkPath(hivePath)==TRUE):
+            process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p usbstorage', 
+                                   stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
+            counter=1
+            textarea.insert('end',"\nUSB DEVICES \n")
+            textarea.insert('end',"\nThe information below shows the list of USB devices previously attached to the machine. Details are provided as below:\n")
 
-        index=0
-        for output in process.stdout.readlines():
+            index=0
+            for output in process.stdout.readlines():
         
-            if(output.count('USB Device Name')>0):
+                if(output.count('USB Device Name')>0):
 
-                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
 
-                textarea.insert('end',"                          USB DEVICE - "+str(counter)+"\n")
-                response.append("#####                                              USB DEVICE - "+str(counter)+"\n")
-                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+                    textarea.insert('end',"                          USB DEVICE - "+str(counter)+"\n")
+                    response.append("#####                                              USB DEVICE - "+str(counter)+"\n")
+                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
 
-                counter=counter + 1
+                    counter=counter + 1
 
-            textarea.insert('end',"  "+output.replace("|"," : "))
-            response.append(output)
-            index=index+1
-        if(index==0):
-            textarea.insert('end',"\nNo information found.\n")
-            textarea.insert('end',"\n================================================================================\n")
-            response.append("No information found.|")
+                textarea.insert('end',"  "+output.replace("|"," : "))
+                response.append(output)
+                index=index+1
+            if(index==0):
+                textarea.insert('end',"\nNo information found.\n")
+                textarea.insert('end',"\n================================================================================\n")
+                response.append("No information found.|")
+            else:
+                textarea.insert('end',"\n================================================================================\n")
         else:
-            textarea.insert('end',"\n================================================================================\n")
-    else:
-        openPopup("ERROR - SYSTEM HIVE FILE","SYSTEM Hive File Not Found","14","bold")
+            openPopup("ERROR - SYSTEM HIVE FILE","SYSTEM Hive File Not Found","14","bold")
+    except:
+        textarea.insert('end',"\nNo information found.\n")
+        textarea.insert('end',"\n================================================================================\n")
+        response.append("No information found.|")
+
     return response
 
 #This function is to trigger perl plugin to retrieve windows version and print to result section 
 def winverFunction(hivePath):
     response=[]
-    if(checkPath(hivePath)==TRUE):
-        process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p windowsversion', 
-                               stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
+    try:
+
+        if(checkPath(hivePath)==TRUE):
+            process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p windowsversion', 
+                                   stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
 
         
 
-        textarea.insert('end',"\nOPERATING SYSTEM \n")
-        textarea.insert('end',"\nThe information below shows the Windows Operating system Product name, release version, Composition Edition Id which is the edition upon which the current edition is derived from/based on, registered owner of the Operating system operational on the machine, and installation date and time of OS.\n")
+            textarea.insert('end',"\nOPERATING SYSTEM \n")
+            textarea.insert('end',"\nThe information below shows the Windows Operating system Product name, release version, Composition Edition Id which is the edition upon which the current edition is derived from/based on, registered owner of the Operating system operational on the machine, and installation date and time of OS.\n")
 
-        index=0
-        for output in process.stdout.readlines():
-            if(index==0):
-                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+            index=0
+            for output in process.stdout.readlines():
+                if(index==0):
+                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
 
-                textarea.insert('end',"  PROPERTY                    DESCRIPTION                                                              \n")
-                response.append("@@@@@PROPERTY|DESCRIPTION                                                              \n")
-                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+                    textarea.insert('end',"  PROPERTY                    DESCRIPTION                                                              \n")
+                    response.append("@@@@@PROPERTY|DESCRIPTION                                                              \n")
+                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
 
-            textarea.insert('end',"  "+output.replace("|"," : "))
-            response.append(output)
-            index=index+1
+                textarea.insert('end',"  "+output.replace("|"," : "))
+                response.append(output)
+                index=index+1
             
-        if(index==0):
-            textarea.insert('end',"\nNo information found.\n")
-            textarea.insert('end',"\n================================================================================\n")
-            response.append("No information found.|")
+            if(index==0):
+                textarea.insert('end',"\nNo information found.\n")
+                textarea.insert('end',"\n================================================================================\n")
+                response.append("No information found.|")
+            else:
+                textarea.insert('end',"\n================================================================================\n")
         else:
-            textarea.insert('end',"\n================================================================================\n")
-    else:
-        openPopup("ERROR - SOFTWARE HIVE FILE","SOFTWARE Hive File Not Found","14","bold")
+            openPopup("ERROR - SOFTWARE HIVE FILE","SOFTWARE Hive File Not Found","14","bold")
+    except:
+        textarea.insert('end',"\nNo information found.\n")
+        textarea.insert('end',"\n================================================================================\n")
+        response.append("No information found.|")
+
     return response
 
 #This function is to trigger perl plugin to retrieve list of Windows Users and print to result section 
 def userFunction(hivePath):
     response=[]
-    if(checkPath(hivePath)==TRUE):
-        process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p userdetails', 
-                               stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
+    try:
+        if(checkPath(hivePath)==TRUE):
+            process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p userdetails', 
+                                   stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
 
-        counter=1
-        textarea.insert('end',"\nUSER ACCOUNTS \n")
-        textarea.insert('end',"\nThe information below shows user accounts present on the machine. Details include:\n")
-        textarea.insert('end',"\nUsername : This username is provided by Windows Operating System.Username is followed by number within square brackets such as [501]. It denotes the Relative ID(RID). RID is a number that is generated to uniquely identify an account within a domain.\n")
-        textarea.insert('end',"Any group or user created by Microsoft Windows Operating System will have RID less than 1000. Any group or user that the a Microsoft Windows Operating System does not create, such as an account created by the end user has a RID of 1000 or greater by default.\n")
-        textarea.insert('end',"\nFull name : Full name as provided at the time of account creation.\n")
-        textarea.insert('end',"\nUser Comment : Describes the access level and purpose of the user.\n")
-        textarea.insert('end',"\nAccount created : Date and time when account had been created.\n")
-        textarea.insert('end',"\nLast Login Date: Last Login date will shows as 'Account used actively' if account is actively used by the user. The last login date will have a time stamp only if the account has not been logged on since a while as in the case of 'Administrator' user.\n")
-        textarea.insert('end',"\nPassword Reset Date : Date and time when account password was last reset.\n")
-        textarea.insert('end',"\nPassword Setting : This setting shows if password is set to expire after a certain time period or not.\n")
-        index=0
-        for output in process.stdout.readlines():
-            if(output.count('Username')>0):
+            counter=1
+            textarea.insert('end',"\nUSER ACCOUNTS \n")
+            textarea.insert('end',"\nThe information below shows user accounts present on the machine. Details include:\n")
+            textarea.insert('end',"\nUsername : This username is provided by Windows Operating System.Username is followed by number within square brackets such as [501]. It denotes the Relative ID(RID). RID is a number that is generated to uniquely identify an account within a domain.\n")
+            textarea.insert('end',"Any group or user created by Microsoft Windows Operating System will have RID less than 1000. Any group or user that the a Microsoft Windows Operating System does not create, such as an account created by the end user has a RID of 1000 or greater by default.\n")
+            textarea.insert('end',"\nFull name : Full name as provided at the time of account creation.\n")
+            textarea.insert('end',"\nUser Comment : Describes the access level and purpose of the user.\n")
+            textarea.insert('end',"\nAccount created : Date and time when account had been created.\n")
+            textarea.insert('end',"\nLast Login Date: Last Login date will shows as 'Account used actively' if account is actively used by the user. The last login date will have a time stamp only if the account has not been logged on since a while as in the case of 'Administrator' user.\n")
+            textarea.insert('end',"\nPassword Reset Date : Date and time when account password was last reset.\n")
+            textarea.insert('end',"\nPassword Setting : This setting shows if password is set to expire after a certain time period or not.\n")
+            index=0
+            for output in process.stdout.readlines():
+                if(output.count('Username')>0):
 
-                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
 
-                textarea.insert('end',"                          User Details - "+str(counter)+"\n")
-                response.append("#####                                User Details - "+str(counter)+"\n")
-                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+                    textarea.insert('end',"                          User Details - "+str(counter)+"\n")
+                    response.append("#####                                User Details - "+str(counter)+"\n")
+                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
 
-                counter=counter + 1
+                    counter=counter + 1
 
-            textarea.insert('end',"  "+output.replace("|"," : "))
-            response.append(output)
-            index=index+1
-        if(index==0):
-            textarea.insert('end',"\nNo information found.\n")
-            textarea.insert('end',"\n================================================================================\n")
-            response.append("No information found.|")
+                textarea.insert('end',"  "+output.replace("|"," : "))
+                response.append(output)
+                index=index+1
+            if(index==0):
+                textarea.insert('end',"\nNo information found.\n")
+                textarea.insert('end',"\n================================================================================\n")
+                response.append("No information found.|")
+            else:
+                textarea.insert('end',"\n================================================================================\n")
         else:
-            textarea.insert('end',"\n================================================================================\n")
-    else:
-        openPopup("ERROR - SAM HIVE FILE","SAM Hive File Not Found","14","bold")
+            openPopup("ERROR - SAM HIVE FILE","SAM Hive File Not Found","14","bold")
+    except:
+        textarea.insert('end',"\nNo information found.\n")
+        textarea.insert('end',"\n================================================================================\n")
+        response.append("No information found.|")
+
     return response
 
 #This function is to trigger perl plugin to retrieve network card details and print to result section 
 def networkCardsFunction(hivePath):
     response=[]
-    if(checkPath(hivePath)==TRUE):
-        process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p networkcards', 
-                               stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
+    try:
 
-        textarea.insert('end',"\nNETWORK CARDS \n")
-        textarea.insert('end',"\nThe information below shows the network cards that were in use on this machine. The result can show two types of network cards; Ethernet (wired) or wireless interface. It also indicates the date and time when these cards were last used.\n")
-        index=0
-        for output in process.stdout.readlines(): 
-            if(index==0):
-                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+        if(checkPath(hivePath)==TRUE):
+            process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p networkcards', 
+                                   stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
 
-                textarea.insert('end',"  NETWORK CARD NAME                                   LAST UPDATE DATE TIME                     \n")
-                response.append("@@@@@NETWORK CARD NAME|LAST UPDATE DATE TIME                     \n")
-                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+            textarea.insert('end',"\nNETWORK CARDS \n")
+            textarea.insert('end',"\nThe information below shows the network cards that were in use on this machine. The result can show two types of network cards; Ethernet (wired) or wireless interface. It also indicates the date and time when these cards were last used.\n")
+            index=0
+            for output in process.stdout.readlines(): 
+                if(index==0):
+                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
 
-            textarea.insert('end',"  "+output.replace("|","  "))
-            response.append(output)
-            index=index+1
+                    textarea.insert('end',"  NETWORK CARD NAME                                   LAST UPDATE DATE TIME                     \n")
+                    response.append("@@@@@NETWORK CARD NAME|LAST UPDATE DATE TIME                     \n")
+                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
+
+                textarea.insert('end',"  "+output.replace("|","  "))
+                response.append(output)
+                index=index+1
             
-        if(index==0):
+            if(index==0):
 
-            textarea.insert('end',"\nNo information found.\n")
-            textarea.insert('end',"\n================================================================================\n")
-            response.append("No information found.|")
+                textarea.insert('end',"\nNo information found.\n")
+                textarea.insert('end',"\n================================================================================\n")
+                response.append("No information found.|")
+            else:
+                textarea.insert('end',"\n================================================================================\n")
         else:
-            textarea.insert('end',"\n================================================================================\n")
-    else:
-        openPopup("ERROR - SOFTWARE HIVE FILE","SOFTWARE Hive File Not Found")
+            openPopup("ERROR - SOFTWARE HIVE FILE","SOFTWARE Hive File Not Found")
+    except:
+        textarea.insert('end',"\nNo information found.\n")
+        textarea.insert('end',"\n================================================================================\n")
+        response.append("No information found.|")
+
     return response
 
 #This function is to trigger perl plugin to retrieve User Groups and print to result section 
 def groupFunction(hivePath):
     response=[]
-    if(checkPath(hivePath)==TRUE):
-        process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p usergroups', 
-                               stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
-        #output = process.stdout.readlines()
-        counter=1
-        textarea.insert('end',"\nUSER GROUPS \n")
-        textarea.insert('end',"\nThe information below shows the list of user groups present on the machine. Details include:\n")
-        textarea.insert('end',"\nGroup Name: Name of the group.\n")
-        textarea.insert('end',"\nLast Updated: Demonstrates when the use group was last modified. For instance, additional or removal of users in the group will be considered as a modification to the group.\n")
-        textarea.insert('end',"\nGroup Description: Describes the access level of the group.\n")
-        textarea.insert('end',"\nUsers: The user SIDs or Security Identifiers for the user accounts are displayed under Users. When an account or group is established, the system generates the SID that identifies that specific account or group. A Comprehensive list and descriptions of well-known SIDs can be found here for further analysis - https://docs.microsoft.com/en-us/windows/security/identity-protection/access-control/security-identifiers.\n")
-        index=0
-        for output in process.stdout.readlines():
-            if(output.count('Group Name')>0):
-                textarea.insert('end',"--------------------------------------------------------------------------------\n")
-                textarea.insert('end',"                          Group Details - "+str(counter)+"\n")
-                response.append("#####                                  Group Details - "+str(counter)+"\n")
-                textarea.insert('end',"--------------------------------------------------------------------------------\n")
-                counter=counter + 1
-            textarea.insert('end',"  "+output.replace("|"," : "))
-            outputSplit = output.partition('|')
-            if(len(outputSplit[2])>119):
-                response.append(outputSplit[0]+outputSplit[1]+outputSplit[2][0:120])
-                response.append(" |"+outputSplit[2][120:-1])
+    try:
+        if(checkPath(hivePath)==TRUE):
+            process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p usergroups', 
+                                   stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
+            #output = process.stdout.readlines()
+            counter=1
+            textarea.insert('end',"\nUSER GROUPS \n")
+            textarea.insert('end',"\nThe information below shows the list of user groups present on the machine. Details include:\n")
+            textarea.insert('end',"\nGroup Name: Name of the group.\n")
+            textarea.insert('end',"\nLast Updated: Demonstrates when the use group was last modified. For instance, additional or removal of users in the group will be considered as a modification to the group.\n")
+            textarea.insert('end',"\nGroup Description: Describes the access level of the group.\n")
+            textarea.insert('end',"\nUsers: The user SIDs or Security Identifiers for the user accounts are displayed under Users. When an account or group is established, the system generates the SID that identifies that specific account or group. A Comprehensive list and descriptions of well-known SIDs can be found here for further analysis - https://docs.microsoft.com/en-us/windows/security/identity-protection/access-control/security-identifiers.\n")
+            index=0
+            for output in process.stdout.readlines():
+                if(output.count('Group Name')>0):
+                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
+                    textarea.insert('end',"                          Group Details - "+str(counter)+"\n")
+                    response.append("#####                                  Group Details - "+str(counter)+"\n")
+                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
+                    counter=counter + 1
+                textarea.insert('end',"  "+output.replace("|"," : "))
+                outputSplit = output.partition('|')
+                if(len(outputSplit[2])>119):
+                    response.append(outputSplit[0]+outputSplit[1]+outputSplit[2][0:120])
+                    response.append(" |"+outputSplit[2][120:-1])
+                else:
+                    response.append(output)
+                index=index+1
+            if(index==0):
+                textarea.insert('end',"\nNo information found.\n")
+                textarea.insert('end',"\n================================================================================\n")
+                response.append("No information found.|")
             else:
-                response.append(output)
-            index=index+1
-        if(index==0):
-            textarea.insert('end',"\nNo information found.\n")
-            textarea.insert('end',"\n================================================================================\n")
-            response.append("No information found.|")
+                textarea.insert('end',"\n================================================================================\n")
         else:
-            textarea.insert('end',"\n================================================================================\n")
-    else:
-        openPopup("ERROR - SAM HIVE FILE","SAM Hive File Not Found","14","bold")
+            openPopup("ERROR - SAM HIVE FILE","SAM Hive File Not Found","14","bold")
+    except:
+        textarea.insert('end',"\nNo information found.\n")
+        textarea.insert('end',"\n================================================================================\n")
+        response.append("No information found.|")
     return response
 
 #This function is to trigger perl plugin to retrieve dhcp information and print to result section 
 def dhcpFunction(hivePath):
     response=[]
-    if(checkPath(hivePath)==TRUE):
-        process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p dhcpinformation', 
-                               stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
+    try:
 
-        counter=1
+        if(checkPath(hivePath)==TRUE):
+            process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p dhcpinformation', 
+                                   stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
 
-        textarea.insert('end',"\nDHCP INFORMATION \n")
-        textarea.insert('end',"\nDHCP is the Dynamic Host Control Protocol that is responsible for allocating IP addresses to computers on a network. The information below explains the attributes associated with DHCP:\n")
-        textarea.insert('end',"\nAdapter: Windows provided unique ID every time DHCP assigns a new IP to the machine\n")
-        textarea.insert('end',"\nLast write time: This is the time when the DHCP allocated the Ip address to the machine\n")
-        textarea.insert('end',"\nDHCP IP address: IP address allocated to the machine\n")
-        textarea.insert('end',"\nDHCP subnet mask: The subnet mask divides the IP address into 2 parts; the host and network address. Thus, subnet mask defines part of the IP address associated with the machine and part of IP address which is associated with the network.\n")
-        textarea.insert('end',"\nDHCP server IP: This provides the IP address of the server, which uses DHCP to dynamically issue IP addresses to networked devices, enabling connectivity with another network.\n")
-        textarea.insert('end',"\nDHCP Lease Obtained Time: Time when DHCP lease was obtained.\n")
-        textarea.insert('end',"\nDHCP Terminate Time: Time when DHCP lease will expire.\n")
-        textarea.insert('end',"\nDHCP default gateway: The router's IP which was used to connect to outside networks such as the internet.\n")
+            counter=1
+
+            textarea.insert('end',"\nDHCP INFORMATION \n")
+            textarea.insert('end',"\nDHCP is the Dynamic Host Control Protocol that is responsible for allocating IP addresses to computers on a network. The information below explains the attributes associated with DHCP:\n")
+            textarea.insert('end',"\nAdapter: Windows provided unique ID every time DHCP assigns a new IP to the machine\n")
+            textarea.insert('end',"\nLast write time: This is the time when the DHCP allocated the Ip address to the machine\n")
+            textarea.insert('end',"\nDHCP IP address: IP address allocated to the machine\n")
+            textarea.insert('end',"\nDHCP subnet mask: The subnet mask divides the IP address into 2 parts; the host and network address. Thus, subnet mask defines part of the IP address associated with the machine and part of IP address which is associated with the network.\n")
+            textarea.insert('end',"\nDHCP server IP: This provides the IP address of the server, which uses DHCP to dynamically issue IP addresses to networked devices, enabling connectivity with another network.\n")
+            textarea.insert('end',"\nDHCP Lease Obtained Time: Time when DHCP lease was obtained.\n")
+            textarea.insert('end',"\nDHCP Terminate Time: Time when DHCP lease will expire.\n")
+            textarea.insert('end',"\nDHCP default gateway: The router's IP which was used to connect to outside networks such as the internet.\n")
         
-        index=0
-        for output in process.stdout.readlines():
-            if(output.count('Adapter')>0):
-                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+            index=0
+            for output in process.stdout.readlines():
+                if(output.count('Adapter')>0):
+                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
 
-                textarea.insert('end',"                          ADAPTER - "+str(counter)+"\n")
-                response.append("#####                                 ADAPTER - "+str(counter)+"\n")
-                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+                    textarea.insert('end',"                          ADAPTER - "+str(counter)+"\n")
+                    response.append("#####                                 ADAPTER - "+str(counter)+"\n")
+                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
 
-                counter=counter + 1
+                    counter=counter + 1
 
-            textarea.insert('end',"  "+output.replace("|"," : "))
-            response.append(output)
-            index=index+1
+                textarea.insert('end',"  "+output.replace("|"," : "))
+                response.append(output)
+                index=index+1
             
-        if(index==0):
-            textarea.insert('end',"\nNo information found.\n")
-            textarea.insert('end',"\n================================================================================\n")
-            response.append("No information found.|")
+            if(index==0):
+                textarea.insert('end',"\nNo information found.\n")
+                textarea.insert('end',"\n================================================================================\n")
+                response.append("No information found.|")
+            else:
+                textarea.insert('end',"\n================================================================================\n")
         else:
-            textarea.insert('end',"\n================================================================================\n")
-    else:
-        openPopup("ERROR - SYSTEM HIVE FILE","SYSTEM Hive File Not Found","14","bold")
+            openPopup("ERROR - SYSTEM HIVE FILE","SYSTEM Hive File Not Found","14","bold")
+    except:
+        textarea.insert('end',"\nNo information found.\n")
+        textarea.insert('end',"\n================================================================================\n")
+        response.append("No information found.|")
     return response
 
 #This function is to trigger perl plugin to retrieve timezone set on device and print to result section 
 def timezoneFunction(hivePath):
     response=[]
-    if(checkPath(hivePath)==TRUE):
-        process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p timezonedetails', 
-                               stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
+    try:
 
-        textarea.insert('end',"\nCOMPUTER TIMEZONE \n")
-        textarea.insert('end',"\nTimezone defined for this machine is:\n")
+        if(checkPath(hivePath)==TRUE):
+            process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p timezonedetails', 
+                                   stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
 
-        index=0
-        for output in process.stdout.readlines():
-            if(index==0):
-                textarea.insert('end',"--------------------------------------------------------------------------------\n")
-                textarea.insert('end',"  PROPERTY               DESCRIPTION                                                              \n")
-                response.append("@@@@@PROPERTY|DESCRIPTION                                                              \n")
-                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+            textarea.insert('end',"\nCOMPUTER TIMEZONE \n")
+            textarea.insert('end',"\nTimezone defined for this machine is:\n")
 
-            textarea.insert('end',"  "+output.replace("|"," : "))
-            response.append(output)
-            index=index+1
+            index=0
+            for output in process.stdout.readlines():
+                if(index==0):
+                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
+                    textarea.insert('end',"  PROPERTY               DESCRIPTION                                                              \n")
+                    response.append("@@@@@PROPERTY|DESCRIPTION                                                              \n")
+                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
+
+                textarea.insert('end',"  "+output.replace("|"," : "))
+                response.append(output)
+                index=index+1
             
-        if(index==0):
-            textarea.insert('end',"\nNo information found.\n")
-            textarea.insert('end',"\n================================================================================\n")
-            response.append("No information found.|")
+            if(index==0):
+                textarea.insert('end',"\nNo information found.\n")
+                textarea.insert('end',"\n================================================================================\n")
+                response.append("No information found.|")
+            else:
+                textarea.insert('end',"\n================================================================================\n")
         else:
-            textarea.insert('end',"\n================================================================================\n")
-    else:
-        openPopup("ERROR - SYSTEM HIVE FILE","SYSTEM Hive File Not Found","14","bold")
+            openPopup("ERROR - SYSTEM HIVE FILE","SYSTEM Hive File Not Found","14","bold")
+    except:
+        textarea.insert('end',"\nNo information found.\n")
+        textarea.insert('end',"\n================================================================================\n")
+        response.append("No information found.|")
     return response
 
 #This function is to trigger perl plugin to retrieve last shutdown time and print to result section 
 def shutdownFunction(hivePath):
     response=[]
-    if(checkPath(hivePath)==TRUE):
-        process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p shutdowndetails', 
-                               stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
+    try:
 
-        textarea.insert('end',"\nSHUTDOWN TIME \n")
-        textarea.insert('end',"\nLast System shutdown time is as follows::\n")
-        index=0
-        for output in process.stdout.readlines():
-            if(index==0):
-                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+        if(checkPath(hivePath)==TRUE):
+            process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p shutdowndetails', 
+                                   stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
 
-                textarea.insert('end',"  PROPERTY               DESCRIPTION                                                              \n")
-                response.append("@@@@@PROPERTY|DESCRIPTION                                                              \n")
-                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+            textarea.insert('end',"\nSHUTDOWN TIME \n")
+            textarea.insert('end',"\nLast System shutdown time is as follows::\n")
+            index=0
+            for output in process.stdout.readlines():
+                if(index==0):
+                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
 
-            textarea.insert('end',"  "+output.replace("|"," : "))
-            response.append(output)
-            index=index+1
+                    textarea.insert('end',"  PROPERTY               DESCRIPTION                                                              \n")
+                    response.append("@@@@@PROPERTY|DESCRIPTION                                                              \n")
+                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
+
+                textarea.insert('end',"  "+output.replace("|"," : "))
+                response.append(output)
+                index=index+1
             
-        if(index==0):
-            textarea.insert('end',"\nNo information found.\n")
-            textarea.insert('end',"\n================================================================================\n")
-            response.append("No information found.|")
+            if(index==0):
+                textarea.insert('end',"\nNo information found.\n")
+                textarea.insert('end',"\n================================================================================\n")
+                response.append("No information found.|")
+            else:
+                textarea.insert('end',"\n================================================================================\n")
         else:
-            textarea.insert('end',"\n================================================================================\n")
-    else:
-        openPopup("ERROR - SYSTEM HIVE FILE","SYSTEM Hive File Not Found","14","bold")
+            openPopup("ERROR - SYSTEM HIVE FILE","SYSTEM Hive File Not Found","14","bold")
+    except:
+        textarea.insert('end',"\nNo information found.\n")
+        textarea.insert('end',"\n================================================================================\n")
+        response.append("No information found.|")
+
     return response
 
 #This function is to trigger perl plugin to recent documents and print to result section 
 def recentDocumentsFunction(hivePath):
     response=[]
-    if(checkPath(hivePath)==TRUE):
-        process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p recentdocuments', 
-                               stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
+    try:
 
-        textarea.insert('end',"\nRECENT DOCUMENTS \n")
-        textarea.insert('end',"\nThe information below shows list of documents recently accessed on the machine. The documents are divided into multiple categorises by file type or extension. Last write time under each category of document showcases the last time that any document of that was modified.\n")
+        if(checkPath(hivePath)==TRUE):
+            process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p recentdocuments', 
+                                   stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
 
-        index=0
-        for output in process.stdout.readlines():
+            textarea.insert('end',"\nRECENT DOCUMENTS \n")
+            textarea.insert('end',"\nThe information below shows list of documents recently accessed on the machine. The documents are divided into multiple categorises by file type or extension. Last write time under each category of document showcases the last time that any document of that was modified.\n")
+
+            index=0
+            for output in process.stdout.readlines():
             
-            if(output.count('Type/Extension')>0):
-                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+                if(output.count('Type/Extension')>0):
+                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
 
-                textarea.insert('end',"                          Type/Extension - "+output.partition('|')[2])
-                response.append("#####                             Type/Extension - "+output.partition('|')[2])
-                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+                    textarea.insert('end',"                          Type/Extension - "+output.partition('|')[2])
+                    response.append("#####                             Type/Extension - "+output.partition('|')[2])
+                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
+                else:
+                    textarea.insert('end',"  "+output.replace("|"," : "))
+                    response.append(output)
+                index=index+1
+            if(index==0):
+                textarea.insert('end',"\nNo information found.\n")
+                textarea.insert('end',"\n================================================================================\n")
+                response.append("No information found.|")
             else:
-                textarea.insert('end',"  "+output.replace("|"," : "))
-                response.append(output)
-            index=index+1
-        if(index==0):
-            textarea.insert('end',"\nNo information found.\n")
-            textarea.insert('end',"\n================================================================================\n")
-            response.append("No information found.|")
+                textarea.insert('end',"\n================================================================================\n")
         else:
-            textarea.insert('end',"\n================================================================================\n")
-    else:
-        openPopup("ERROR - NTUSER.DAT HIVE FILE","NTUSER.DAT Hive File Not Found","14","bold")
+            openPopup("ERROR - NTUSER.DAT HIVE FILE","NTUSER.DAT Hive File Not Found","14","bold")
+    except:
+        textarea.insert('end',"\nNo information found.\n")
+        textarea.insert('end',"\n================================================================================\n")
+        response.append("No information found.|")
     return response
 
 #This function is to trigger perl plugin to recent Applciations and print to result section
 def recentAppsFunction(hivePath):
     response=[]
-    if(checkPath(hivePath)==TRUE):
+    try:
 
-        process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p recentapplications', 
-                               stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
+        if(checkPath(hivePath)==TRUE):
 
-        textarea.insert('end',"\n RECENT APPLICATIONS \n")
-        textarea.insert('end',"\nThe information below shows list of applications recently accessed on the machine. The documents are divided into multiple categorises by file type or extension. Last access date time against each application showcases the last time application was used on the machine.\n")
+            process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p recentapplications', 
+                                   stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
 
-        index=0
-        for output in process.stdout.readlines():
-            if(index==0):
-                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+            textarea.insert('end',"\n RECENT APPLICATIONS \n")
+            textarea.insert('end',"\nThe information below shows list of applications recently accessed on the machine. The documents are divided into multiple categorises by file type or extension. Last access date time against each application showcases the last time application was used on the machine.\n")
 
-                textarea.insert('end',"  LAST ACCESS DATE TIME                   APPLICATIONS                                                             \n")
-                response.append("@@@@@LAST ACCESS DATE TIME|APPLICATIONS                                                             \n")
-                textarea.insert('end',"--------------------------------------------------------------------------------\n")
-            textarea.insert('end',"  "+output.replace("|"," : "))
-            response.append(output)
-            index=index+1
+            index=0
+            for output in process.stdout.readlines():
+                if(index==0):
+                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
+
+                    textarea.insert('end',"  LAST ACCESS DATE TIME                   APPLICATIONS                                                             \n")
+                    response.append("@@@@@LAST ACCESS DATE TIME|APPLICATIONS                                                             \n")
+                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
+                textarea.insert('end',"  "+output.replace("|"," : "))
+                response.append(output)
+                index=index+1
             
-        if(index==0):
-            textarea.insert('end',"\nNo information found.\n")
-            textarea.insert('end',"\n================================================================================\n")
-            response.append("No information found.|")
+            if(index==0):
+                textarea.insert('end',"\nNo information found.\n")
+                textarea.insert('end',"\n================================================================================\n")
+                response.append("No information found.|")
+            else:
+                textarea.insert('end',"\n================================================================================\n")
         else:
-            textarea.insert('end',"\n================================================================================\n")
-    else:
-        openPopup("ERROR - NTUSER.DAT HIVE FILE","NTUSER.DAT Hive File Not Found","14","bold")
+            openPopup("ERROR - NTUSER.DAT HIVE FILE","NTUSER.DAT Hive File Not Found","14","bold")
+    except:
+        textarea.insert('end',"\nNo information found.\n")
+        textarea.insert('end',"\n================================================================================\n")
+        response.append("No information found.|")
     return response
 
 #This function is to trigger perl plugin to recent web urls and print to result section
 def webUrlsFunction(hivePath):
     response=[]
-    #print("WebHive Path"+hivePath)
-    if(checkPath(hivePath)==TRUE):
-        process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p urlstyped', 
-                               stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
+    try:
 
-        textarea.insert('end',"\n RECENT WEB URLs \n")
-        textarea.insert('end',"\nThe information below shows web addresses that have been previously visited by the user. Last write time denotes the time when the last visited url was typed.\n")
-        index=0
-        for output in process.stdout.readlines():
-            if(index==0):
-                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+        if(checkPath(hivePath)==TRUE):
+            process = subprocess.Popen(staticVariables.regRipperPath+'"'+hivePath+'"'+' -p urlstyped', 
+                                   stdout=subprocess.PIPE,universal_newlines=True, stderr=subprocess.PIPE,creationflags=staticVariables.subprocessWindowConfig)
 
-                textarea.insert('end',"  PROPERTY          DESCRIPTION                                                              \n")
-                response.append("@@@@@PROPERTY|DESCRIPTION                                                              \n")
-                textarea.insert('end',"--------------------------------------------------------------------------------\n")
+            textarea.insert('end',"\n RECENT WEB URLs \n")
+            textarea.insert('end',"\nThe information below shows web addresses that have been previously visited by the user. Last write time denotes the time when the last visited url was typed.\n")
+            index=0
+            for output in process.stdout.readlines():
+                if(index==0):
+                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
 
-            textarea.insert('end',"  "+output.replace("|"," : "))
-            response.append(output)
-            index=index+1
+                    textarea.insert('end',"  PROPERTY          DESCRIPTION                                                              \n")
+                    response.append("@@@@@PROPERTY|DESCRIPTION                                                              \n")
+                    textarea.insert('end',"--------------------------------------------------------------------------------\n")
+
+                textarea.insert('end',"  "+output.replace("|"," : "))
+                response.append(output)
+                index=index+1
             
-        if(index==0):
-            textarea.insert('end',"\nNo information found.\n")
-            textarea.insert('end',"\n================================================================================\n")
-            response.append("No information found.|")
+            if(index==0):
+                textarea.insert('end',"\nNo information found.\n")
+                textarea.insert('end',"\n================================================================================\n")
+                response.append("No information found.|")
+            else:
+                textarea.insert('end',"\n================================================================================\n")
         else:
-            textarea.insert('end',"\n================================================================================\n")
-    else:
-        openPopup("ERROR - NTUSER.DAT HIVE FILE","NTUSER.DAT Hive File Not Found","14","bold")
+            openPopup("ERROR - NTUSER.DAT HIVE FILE","NTUSER.DAT Hive File Not Found","14","bold")
+    except:
+        textarea.insert('end',"\nNo information found.\n")
+        textarea.insert('end',"\n================================================================================\n")
+        response.append("No information found.|")
     return response
 
 #Common Function is used to search for filename and return the directory path
